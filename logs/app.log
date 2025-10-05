@@ -66,3 +66,14 @@
 [05-10-2025 20:23:59] [INFO] Loaded module "ExposeGuildChannels": modules\ExposeGuildChannels
 [05-10-2025 20:23:59] [INFO] Client ready! Signed in as Lumix#2650!
 [05-10-2025 20:23:59] [INFO] API running at http://localhost:3144
+[05-10-2025 22:02:06] [INFO] Loading module: BumpReminder
+[05-10-2025 22:02:06] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[05-10-2025 22:02:06] [INFO] Loading module: ExposeGuildChannels
+[05-10-2025 22:02:06] [INFO] Loaded module "ExposeGuildChannels": modules\ExposeGuildChannels
+[05-10-2025 22:02:06] [INFO] Migration 1759694469-create_birthday_settings_table.sql successfully executed!
+[05-10-2025 22:02:06] [INFO] Loading module: BumpReminder
+[05-10-2025 22:02:06] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[05-10-2025 22:02:06] [INFO] Loading module: ExposeGuildChannels
+[05-10-2025 22:02:06] [INFO] Loaded module "ExposeGuildChannels": modules\ExposeGuildChannels
+[05-10-2025 22:02:06] [INFO] Client ready! Signed in as Lumix#2650!
+[05-10-2025 22:02:06] [INFO] API running at http://localhost:3144
