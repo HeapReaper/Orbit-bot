@@ -3,7 +3,6 @@ import { Client } from "discord.js";
 import cors from "cors";
 
 export default function registerApi(app: Application, client: Client) {
-  // Sta alle origins toe (of specificeer je frontend URL)
   app.use(cors({ origin: "*" }));
 
   app.get("/api/ExposeGuildChannels", (req, res) => {
