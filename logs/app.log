@@ -55,3 +55,14 @@
 [05-10-2025 19:37:56] [INFO] Loaded module "ExposeGuildChannels": modules\ExposeGuildChannels
 [05-10-2025 19:37:56] [INFO] Client ready! Signed in as Lumix#2650!
 [05-10-2025 19:37:56] [INFO] API running at http://localhost:3144
+[05-10-2025 20:23:59] [INFO] Loading module: BumpReminder
+[05-10-2025 20:23:59] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[05-10-2025 20:23:59] [INFO] Loading module: ExposeGuildChannels
+[05-10-2025 20:23:59] [INFO] Loaded module "ExposeGuildChannels": modules\ExposeGuildChannels
+[05-10-2025 20:23:59] [INFO] Migration 1759688482-bump_reminder_settings.sql successfully executed!
+[05-10-2025 20:23:59] [INFO] Loading module: BumpReminder
+[05-10-2025 20:23:59] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[05-10-2025 20:23:59] [INFO] Loading module: ExposeGuildChannels
+[05-10-2025 20:23:59] [INFO] Loaded module "ExposeGuildChannels": modules\ExposeGuildChannels
+[05-10-2025 20:23:59] [INFO] Client ready! Signed in as Lumix#2650!
+[05-10-2025 20:23:59] [INFO] API running at http://localhost:3144
