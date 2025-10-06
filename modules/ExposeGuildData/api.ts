@@ -3,7 +3,20 @@ import { Client } from "discord.js";
 import cors from "cors";
 
 export default function registerApi(app: Application, client: Client) {
-  app.use(cors({ origin: "*" }));
+  const allowedOrigins = ["http://localhost:3000", "https://orbit.heapreaper.nl"];
+
+  app.use(cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like Postman or server-side)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    }
+  }));
 
   app.get("/api/expose-guild-channels-and-roles", (req, res) => {
     if (!client.isReady()) {
