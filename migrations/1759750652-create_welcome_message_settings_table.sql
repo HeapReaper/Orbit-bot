@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `welcome_message_settings` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `guild_id` VARCHAR(22) NOT NULL UNIQUE,
-    `message` VARCHAR(50) DEFAULT NULL,
+    `message` VARCHAR(255) DEFAULT NULL,
     `channel` VARCHAR(22) DEFAULT NULL,
     `enabled` INT NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
