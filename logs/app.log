@@ -138,3 +138,147 @@
 [06-10-2025 13:25:33] [INFO] Loading module: ExposeGuildData
 [06-10-2025 13:25:33] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
 [06-10-2025 13:25:33] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 13:38:31] [INFO] Loading module: BumpReminder
+[06-10-2025 13:38:31] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:38:31] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:38:31] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:38:31] [INFO] Migration 1759750652-create_welcome_message_settings_table.sql successfully executed!
+[06-10-2025 13:38:31] [INFO] Loading module: BumpReminder
+[06-10-2025 13:38:31] [INFO] API running at http://localhost:3144
+[06-10-2025 13:38:31] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:38:31] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:38:31] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:38:31] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 13:38:52] [INFO] Loading module: BumpReminder
+[06-10-2025 13:38:52] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:38:52] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:38:52] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:38:52] [INFO] Loading module: BumpReminder
+[06-10-2025 13:38:52] [INFO] API running at http://localhost:3144
+[06-10-2025 13:38:52] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:38:52] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:38:52] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:38:52] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 13:39:04] [INFO] Loading module: BumpReminder
+[06-10-2025 13:39:04] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:39:04] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:39:04] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:39:04] [INFO] Migration 1759750652-create_welcome_message_settings_table.sql successfully executed!
+[06-10-2025 13:39:04] [INFO] Loading module: BumpReminder
+[06-10-2025 13:39:04] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:39:04] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:39:04] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:39:04] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 13:39:04] [INFO] API running at http://localhost:3144
+[06-10-2025 13:39:28] [INFO] Loading module: BumpReminder
+[06-10-2025 13:39:28] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:39:28] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:39:28] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:39:28] [INFO] Migration 1759750652-create_welcome_message_settings_table.sql successfully executed!
+[06-10-2025 13:39:28] [INFO] Loading module: BumpReminder
+[06-10-2025 13:39:28] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 13:39:28] [INFO] Loading module: ExposeGuildData
+[06-10-2025 13:39:28] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 13:39:28] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 13:39:28] [INFO] API running at http://localhost:3144
+[06-10-2025 14:32:06] [INFO] Loading module: Bot
+[06-10-2025 14:32:06] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 14:32:06] [INFO] Loading module: BumpReminder
+[06-10-2025 14:32:06] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 14:32:06] [INFO] Loading module: ExposeGuildData
+[06-10-2025 14:32:06] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 14:32:06] [INFO] Loading module: Bot
+[06-10-2025 14:32:06] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 14:32:06] [INFO] Loading module: BumpReminder
+[06-10-2025 14:32:06] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 14:32:06] [INFO] Loading module: ExposeGuildData
+[06-10-2025 14:32:06] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 14:32:06] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 14:32:06] [INFO] API running at http://localhost:3144
+[06-10-2025 14:33:02] [INFO] Loading module: Bot
+[06-10-2025 14:33:02] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 14:33:02] [INFO] Loading module: BumpReminder
+[06-10-2025 14:33:02] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 14:33:02] [INFO] Loading module: ExposeGuildData
+[06-10-2025 14:33:02] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 14:33:02] [INFO] Loading module: Bot
+[06-10-2025 14:33:02] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 14:33:02] [INFO] Loading module: BumpReminder
+[06-10-2025 14:33:02] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 14:33:02] [INFO] Loading module: ExposeGuildData
+[06-10-2025 14:33:02] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 14:33:02] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 14:33:02] [INFO] API running at http://localhost:3144
+[06-10-2025 14:34:07] [INFO] Loading module: Bot
+[06-10-2025 14:34:07] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 14:34:07] [INFO] Loading module: BumpReminder
+[06-10-2025 14:34:07] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 14:34:07] [INFO] Loading module: ExposeGuildData
+[06-10-2025 14:34:07] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 14:34:07] [INFO] Loading module: Bot
+[06-10-2025 14:34:07] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 14:34:07] [INFO] Loading module: BumpReminder
+[06-10-2025 14:34:07] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 14:34:07] [INFO] Loading module: ExposeGuildData
+[06-10-2025 14:34:07] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 14:34:07] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 14:34:07] [INFO] API running at http://localhost:3144
+[06-10-2025 16:38:02] [INFO] Loading module: Bot
+[06-10-2025 16:38:02] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 16:38:02] [INFO] Loading module: BumpReminder
+[06-10-2025 16:38:02] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 16:38:02] [INFO] Loading module: ExposeGuildData
+[06-10-2025 16:38:02] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 16:38:02] [INFO] Loading module: Users
+[06-10-2025 16:38:02] [INFO] Loaded module "Users": modules\Users
+[06-10-2025 16:38:02] [INFO] Loading module: Bot
+[06-10-2025 16:38:02] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 16:38:02] [INFO] Loading module: BumpReminder
+[06-10-2025 16:38:02] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 16:38:02] [INFO] Loading module: ExposeGuildData
+[06-10-2025 16:38:02] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 16:38:02] [INFO] Loading module: Users
+[06-10-2025 16:38:02] [INFO] Loaded module "Users": modules\Users
+[06-10-2025 16:38:02] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 16:38:02] [INFO] API running at http://localhost:3144
+[06-10-2025 16:39:30] [INFO] Loading module: Bot
+[06-10-2025 16:39:30] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 16:39:30] [INFO] Loading module: BumpReminder
+[06-10-2025 16:39:30] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 16:39:30] [INFO] Loading module: ExposeGuildData
+[06-10-2025 16:39:30] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 16:39:30] [INFO] Loading module: Users
+[06-10-2025 16:39:30] [INFO] Loaded module "Users": modules\Users
+[06-10-2025 16:39:30] [INFO] Loading module: Bot
+[06-10-2025 16:39:30] [INFO] API running at http://localhost:3144
+[06-10-2025 16:39:30] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 16:39:30] [INFO] Loading module: BumpReminder
+[06-10-2025 16:39:30] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 16:39:30] [INFO] Loading module: ExposeGuildData
+[06-10-2025 16:39:30] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 16:39:30] [INFO] Loading module: Users
+[06-10-2025 16:39:30] [INFO] Loaded module "Users": modules\Users
+[06-10-2025 16:39:30] [INFO] Client ready! Signed in as Lumix#2650!
+[06-10-2025 18:36:18] [INFO] Loading module: AutoMessage
+[06-10-2025 18:36:18] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[06-10-2025 18:36:18] [INFO] Loading module: Bot
+[06-10-2025 18:36:18] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 18:36:18] [INFO] Loading module: BumpReminder
+[06-10-2025 18:36:18] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 18:36:18] [INFO] Loading module: ExposeGuildData
+[06-10-2025 18:36:18] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 18:36:18] [INFO] Loading module: Users
+[06-10-2025 18:36:18] [INFO] Loaded module "Users": modules\Users
+[06-10-2025 18:36:18] [INFO] Migration 1759768430-create_auto_message_table.sql successfully executed!
+[06-10-2025 18:36:18] [INFO] Loading module: AutoMessage
+[06-10-2025 18:36:18] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[06-10-2025 18:36:18] [INFO] Loading module: Bot
+[06-10-2025 18:36:18] [INFO] Loaded module "Bot": modules\Bot
+[06-10-2025 18:36:18] [INFO] Loading module: BumpReminder
+[06-10-2025 18:36:18] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[06-10-2025 18:36:18] [INFO] Loading module: ExposeGuildData
+[06-10-2025 18:36:18] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[06-10-2025 18:36:18] [INFO] Loading module: Users
+[06-10-2025 18:36:18] [INFO] API running at http://localhost:3144
+[06-10-2025 18:36:18] [INFO] Loaded module "Users": modules\Users
+[06-10-2025 18:36:18] [INFO] Client ready! Signed in as Lumix#2650!
