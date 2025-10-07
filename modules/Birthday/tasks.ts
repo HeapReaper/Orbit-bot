@@ -44,8 +44,6 @@ export default class Tasks {
         .where({ guild_id: birthday.guild_id })
         .first()
 
-      console.log("TIME DB: ", birthdaySettings.time);
-      console.log("CURRENT TIME: ", getCurrentTime())
       if (birthdaySettings.time !== getCurrentTime()) continue;
 
       const user = await this.client.users.fetch(`${birthday.user_id}`);

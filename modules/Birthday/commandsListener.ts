@@ -5,6 +5,7 @@ import {
   MessageFlags,
   PermissionsBitField,
   EmbedBuilder,
+  ColorResolvable
 } from "discord.js";
 import { Logging } from "@utils/logging";
 import QueryBuilder from "@utils/database";
@@ -160,29 +161,34 @@ export default class CommandsListener {
       return;
     }
 
-    const birthdays = await QueryBuilder.select("birthday").execute();
+    try {
+      const birthdays = await QueryBuilder
+        .select("birthdays")
+        // @ts-ignore
+        .where({ guild_id: interaction.guild.id })
+        .execute();
 
-    let color = null
+      const embed = new EmbedBuilder()
+        .setColor(res.primary_color as ColorResolvable)
+        .setTitle("Birthdays");
 
-    if (res) {
-      color = res.primary_color;
-    } else {
-      color = 0x3498DB
+      for (const birthday of birthdays) {
+        const user = await this.client.users.fetch(birthday.user_id);
+
+        embed.addFields({
+          name: user ? user.displayName : birthday.user_id,
+          value: formatDate(birthday.birthdate),
+        });
+      }
+
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+    } catch (error) {
+      Logging.error(`Error inside birthday: ${error}`);
+      await interaction.reply({
+        content: "Oops, something went wrong...",
+        flags: MessageFlags.Ephemeral,
+      })
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(color.replace("#", "0x"))
-      .setTitle("Birthdays");
-
-    for (const birthday of birthdays) {
-      const user = await this.client.users.fetch(birthday.user_id);
-
-      embed.addFields({
-        name: user ? user.displayName : birthday.user_id,
-        value: formatDate(birthday.birthdate),
-      });
-    }
-
-    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   }
 }
