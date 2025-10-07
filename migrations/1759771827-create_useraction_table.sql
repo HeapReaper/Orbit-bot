@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "UserAction" (
+CREATE TABLE IF NOT EXISTS `user_action` (
     id SERIAL PRIMARY KEY,
     guildId VARCHAR(255) NOT NULL,
     action VARCHAR(255) NOT NULL,
