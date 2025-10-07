@@ -15,11 +15,11 @@ export default class Tasks {
 
     cron.schedule("* * * * *", async () => {
       await this.task();
-    })
+    });
   }
 
   async task() {
-    Logging.info("Running change nickname task in bot/tasks")
+    Logging.info("Running change nickname task in bot/tasks");
 
     const settings = await Database
       .select("bot_settings")
@@ -30,13 +30,13 @@ export default class Tasks {
 
       if (!guild) continue;
 
-      if (!this.client) continue
+      if (!this.client) continue;
 
       if (!this.client.user) continue;
 
-      const botMember = await guild.members.fetch(this.client.user.id) as GuildMember
+      const botMember = await guild.members.fetch(this.client.user.id) as GuildMember;
 
-      await botMember.setNickname(setting.nickname as string)
+      await botMember.setNickname(setting.nickname as string);
     }
   }
 }
