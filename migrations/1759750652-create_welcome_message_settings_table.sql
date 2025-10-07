@@ -3,6 +3,6 @@ CREATE TABLE IF NOT EXISTS `welcome_message_settings` (
     `guild_id` VARCHAR(22) NOT NULL UNIQUE,
     `message` VARCHAR(255) DEFAULT NULL,
     `channel` VARCHAR(22) DEFAULT NULL,
-    `enabled` INT NOT NULL,
+    `enabled` TINYINT(1) NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
