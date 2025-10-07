@@ -1,10 +1,12 @@
 {
   "dependencies": {
     "@heapreaper/discordfaker": "^1.1.9",
+    "@types/luxon": "^3.7.1",
     "chalk": "^5.6.2",
     "cors": "^2.8.5",
     "discord.js": "^14.22.1",
     "express": "^5.1.0",
+    "luxon": "^3.7.2",
     "mysql2": "^3.15.1",
     "node-cron": "^4.2.1"
   },
