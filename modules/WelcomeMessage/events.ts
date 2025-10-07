@@ -3,7 +3,7 @@ import {
   TextChannel,
   Events as DiscordEvents,
 } from "discord.js";
-+import Database from "@utils/database.ts";
+import Database from "@utils/database";
 
 let instance: Events | null = null;
 
