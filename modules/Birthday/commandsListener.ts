@@ -57,7 +57,11 @@ export default class CommandsListener {
       // @ts-ignore
       if (
         (await QueryBuilder.select("birthdays")
-          .where({ user_id: interaction.user.id })
+          .where({
+            user_id: interaction.user.id,
+            // @ts-ignore
+            guild_id: interaction.guild.id
+          })
           .count()
           .get()) !== 0
       ) {
@@ -100,8 +104,12 @@ export default class CommandsListener {
     try {
       // @ts-ignore
       if (
-        (await QueryBuilder.select("birthday")
-          .where({ user_id: interaction.user.id })
+        (await QueryBuilder.select("birthdays")
+          .where({
+            user_id: interaction.user.id,
+            // @ts-ignore
+            guild_id: interaction.guild.id,
+          })
           .count()
           .get()) === 0
       ) {
@@ -112,7 +120,7 @@ export default class CommandsListener {
         return;
       }
 
-      await QueryBuilder.delete("birthday")
+      await QueryBuilder.delete("birthdays")
         .where({ user_id: interaction.user.id })
         .execute();
 
