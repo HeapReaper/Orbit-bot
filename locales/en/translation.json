@@ -1,0 +1,5 @@
+{
+  "greeting": "Hello, {{user}}!",
+  "registered": "You are now registered!",
+  "already_registered": "You are already registered!"
+}
