@@ -3,7 +3,7 @@ import { Client } from "discord.js";
 import cors from "cors";
 
 export default function registerApi(app: Application, client: Client) {
-  const allowedOrigins = ["http://localhost:3000", "https://orbit.heapreaper.nl"];
+  const allowedOrigins = ["http://localhost:3000", "https://botinorbit.com"];
 
   app.use(cors({
     origin: function (origin, callback) {
