@@ -42,8 +42,10 @@ export default class Tasks {
       const channel = await this.client.channels.fetch(message.channel as string) as TextChannel;
       if (!channel) continue;
 
+      const content = message.message.replace(/<u>(.*?)<\/u>/gi, '__$1__');
+
       try {
-        await channel.send(message.message);
+        await channel.send(content);
         Logging.info(`Sent auto message to ${channel.id}`);
       } catch (err) {
         Logging.error(`Failed to send message to ${channel.id}: ${err}`);
