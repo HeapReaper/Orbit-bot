@@ -16,7 +16,6 @@ export default class Tasks {
 
     if (instance) return instance;
     instance = this;
-    void this.task(); // Dev
 
     cron.schedule("* * * * *", async () => {
       await this.task();
