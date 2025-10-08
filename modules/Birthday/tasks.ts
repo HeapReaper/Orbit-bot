@@ -5,14 +5,17 @@ import { getEnv } from "@utils/env.ts";
 import cron from "node-cron";
 import { DateTime } from "luxon";
 import {getCurrentTime} from "@utils/dateTime.ts";
+import { PrismaClient } from "@prisma/client";
 
 let instance: Tasks | null = null;
 
 export default class Tasks {
   private client: Client;
+  private prisma: PrismaClient;
 
   constructor(client: Client) {
     this.client = client;
+    this.prisma = new PrismaClient();
 
     if (instance) return;
     instance = this;

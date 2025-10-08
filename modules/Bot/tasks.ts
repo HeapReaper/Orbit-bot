@@ -2,14 +2,18 @@ import {Client, TextChannel, Guild, GuildMember} from "discord.js";
 import cron from "node-cron";
 import Database from "@utils/database";
 import {Logging} from "@utils/logging";
+import { PrismaClient } from "@prisma/client";
 
 let instance: Tasks | null = null;
 
 export default class Tasks {
   private readonly client: Client;
+  private prisma: PrismaClient;
 
   constructor(client: Client) {
     this.client = client;
+    this.prisma = new PrismaClient()
+
     if (instance) return instance;
     instance = this;
 
@@ -21,11 +25,9 @@ export default class Tasks {
   async task() {
     Logging.info("Running change nickname task in bot/tasks");
 
-    const settings = await Database
-      .select("bot_settings")
-      .get();
+    const data = await this.prisma.bot_settings.findMany();
 
-    for (const setting of settings) {
+    for (const setting of data) {
       const guild = this.client.guilds.cache.get(setting.guild_id as string) as Guild;
 
       if (!guild) continue;
