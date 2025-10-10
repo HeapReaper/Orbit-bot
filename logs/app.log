@@ -5007,3 +5007,235 @@
 [08-10-2025 17:24:18] [INFO] Loading module: WelcomeMessage
 [08-10-2025 17:24:18] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
 [08-10-2025 17:24:18] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:19:08] [INFO] Loading module: AutoMessage
+[10-10-2025 12:19:08] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:19:08] [INFO] Loading module: Birthday
+[10-10-2025 12:19:09] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:19:09] [INFO] Loading module: Bot
+[10-10-2025 12:19:09] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:19:09] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:19:09] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:19:09] [INFO] Loading module: Users
+[10-10-2025 12:19:09] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:19:09] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:19:09] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:19:09] [INFO] Loading module: AutoMessage
+[10-10-2025 12:19:09] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:19:09] [INFO] Loading module: Birthday
+[10-10-2025 12:19:09] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:19:09] [INFO] Loading module: Bot
+[10-10-2025 12:19:09] [INFO] API running at http://localhost:3144
+[10-10-2025 12:19:09] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:19:09] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:19:09] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:19:09] [INFO] Loading module: Users
+[10-10-2025 12:19:09] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:19:09] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:19:09] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:19:09] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:20:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:20:00] [INFO] Running auto message task
+[10-10-2025 12:21:00] [INFO] Running auto message task
+[10-10-2025 12:21:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:22:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:22:00] [INFO] Running auto message task
+[10-10-2025 12:23:00] [INFO] Running auto message task
+[10-10-2025 12:23:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:24:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:24:00] [INFO] Running auto message task
+[10-10-2025 12:25:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:25:00] [INFO] Running auto message task
+[10-10-2025 12:26:00] [INFO] Running auto message task
+[10-10-2025 12:26:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:27:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:27:00] [INFO] Running auto message task
+[10-10-2025 12:28:00] [INFO] Running auto message task
+[10-10-2025 12:28:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:28:58] [INFO] Loading module: AutoMessage
+[10-10-2025 12:28:58] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:28:58] [INFO] Loading module: Birthday
+[10-10-2025 12:28:58] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:28:58] [INFO] Loading module: Bot
+[10-10-2025 12:28:58] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:28:58] [INFO] Loading module: BumpReminder
+[10-10-2025 12:28:58] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:28:58] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:28:58] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:28:58] [INFO] Loading module: Users
+[10-10-2025 12:28:58] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:28:58] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:28:58] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:28:58] [INFO] Loading module: AutoMessage
+[10-10-2025 12:28:58] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:28:58] [INFO] Loading module: Birthday
+[10-10-2025 12:28:58] [INFO] API running at http://localhost:3144
+[10-10-2025 12:28:58] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:28:58] [INFO] Loading module: Bot
+[10-10-2025 12:28:58] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:28:58] [INFO] Loading module: BumpReminder
+[10-10-2025 12:28:58] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:28:58] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:28:58] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:28:58] [INFO] Loading module: Users
+[10-10-2025 12:28:58] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:28:58] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:28:58] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:28:58] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:29:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:29:00] [INFO] Running auto message task
+[10-10-2025 12:30:00] [INFO] Running auto message task
+[10-10-2025 12:30:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:30:36] [INFO] Loading module: AutoMessage
+[10-10-2025 12:30:36] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:30:36] [INFO] Loading module: Birthday
+[10-10-2025 12:30:36] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:30:36] [INFO] Loading module: Bot
+[10-10-2025 12:30:36] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:30:36] [INFO] Loading module: BumpReminder
+[10-10-2025 12:30:36] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:30:36] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:30:36] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:30:36] [INFO] Loading module: Users
+[10-10-2025 12:30:36] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:30:36] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:30:36] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:30:36] [INFO] Loading module: AutoMessage
+[10-10-2025 12:30:36] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:30:36] [INFO] Loading module: Birthday
+[10-10-2025 12:30:36] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:30:36] [INFO] Loading module: Bot
+[10-10-2025 12:30:36] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:30:36] [INFO] Loading module: BumpReminder
+[10-10-2025 12:30:36] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:30:36] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:30:36] [INFO] API running at http://localhost:3144
+[10-10-2025 12:30:36] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:30:36] [INFO] Loading module: Users
+[10-10-2025 12:30:36] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:30:36] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:30:36] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:30:36] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:31:00] [INFO] Running auto message task
+[10-10-2025 12:31:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:31:53] [INFO] Loading module: AutoMessage
+[10-10-2025 12:31:53] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:31:53] [INFO] Loading module: Birthday
+[10-10-2025 12:31:53] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:31:53] [INFO] Loading module: Bot
+[10-10-2025 12:31:54] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:31:54] [INFO] Loading module: BumpReminder
+[10-10-2025 12:31:54] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:31:54] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:31:54] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:31:54] [INFO] Loading module: Users
+[10-10-2025 12:31:54] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:31:54] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:31:54] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:31:54] [INFO] Loading module: AutoMessage
+[10-10-2025 12:31:54] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:31:54] [INFO] Loading module: Birthday
+[10-10-2025 12:31:54] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:31:54] [INFO] Loading module: Bot
+[10-10-2025 12:31:54] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:31:54] [INFO] Loading module: BumpReminder
+[10-10-2025 12:31:54] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:31:54] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:31:54] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:31:54] [INFO] Loading module: Users
+[10-10-2025 12:31:54] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:31:54] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:31:54] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:31:54] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:31:54] [INFO] API running at http://localhost:3144
+[10-10-2025 12:32:00] [INFO] Running change nickname task in bot/tasks
+[10-10-2025 12:32:00] [INFO] Running auto message task
+[10-10-2025 12:32:10] [INFO] Loading module: AutoMessage
+[10-10-2025 12:32:10] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:32:10] [INFO] Loading module: Birthday
+[10-10-2025 12:32:10] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:32:10] [INFO] Loading module: Bot
+[10-10-2025 12:32:10] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:32:10] [INFO] Loading module: BumpReminder
+[10-10-2025 12:32:10] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:32:10] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:32:10] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:32:10] [INFO] Loading module: Users
+[10-10-2025 12:32:10] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:32:10] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:32:10] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:32:10] [INFO] Loading module: AutoMessage
+[10-10-2025 12:32:10] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:32:10] [INFO] Loading module: Birthday
+[10-10-2025 12:32:10] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:32:10] [INFO] Loading module: Bot
+[10-10-2025 12:32:10] [INFO] API running at http://localhost:3144
+[10-10-2025 12:32:10] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:32:10] [INFO] Loading module: BumpReminder
+[10-10-2025 12:32:10] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:32:10] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:32:10] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:32:10] [INFO] Loading module: Users
+[10-10-2025 12:32:10] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:32:10] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:32:10] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:32:10] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:32:17] [INFO] Loading module: AutoMessage
+[10-10-2025 12:32:17] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:32:17] [INFO] Loading module: Birthday
+[10-10-2025 12:32:17] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:32:17] [INFO] Loading module: Bot
+[10-10-2025 12:32:17] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:32:17] [INFO] Loading module: BumpReminder
+[10-10-2025 12:32:17] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:32:17] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:32:17] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:32:17] [INFO] Loading module: Users
+[10-10-2025 12:32:17] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:32:17] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:32:17] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:32:17] [INFO] Loading module: AutoMessage
+[10-10-2025 12:32:17] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:32:17] [INFO] Loading module: Birthday
+[10-10-2025 12:32:17] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:32:17] [INFO] Loading module: Bot
+[10-10-2025 12:32:17] [INFO] API running at http://localhost:3144
+[10-10-2025 12:32:17] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:32:17] [INFO] Loading module: BumpReminder
+[10-10-2025 12:32:17] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:32:17] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:32:17] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:32:17] [INFO] Loading module: Users
+[10-10-2025 12:32:17] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:32:17] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:32:17] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:32:17] [INFO] Client ready! Signed in as Lumix#2650!
+[10-10-2025 12:32:24] [INFO] Loading module: AutoMessage
+[10-10-2025 12:32:24] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:32:24] [INFO] Loading module: Birthday
+[10-10-2025 12:32:24] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:32:24] [INFO] Loading module: Bot
+[10-10-2025 12:32:24] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:32:24] [INFO] Loading module: BumpReminder
+[10-10-2025 12:32:24] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:32:24] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:32:24] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:32:24] [INFO] Loading module: Users
+[10-10-2025 12:32:24] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:32:24] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:32:24] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:32:24] [INFO] Loading module: AutoMessage
+[10-10-2025 12:32:24] [INFO] Loaded module "AutoMessage": modules\AutoMessage
+[10-10-2025 12:32:24] [INFO] Loading module: Birthday
+[10-10-2025 12:32:24] [INFO] Loaded module "Birthday": modules\Birthday
+[10-10-2025 12:32:24] [INFO] Loading module: Bot
+[10-10-2025 12:32:24] [INFO] Loaded module "Bot": modules\Bot
+[10-10-2025 12:32:24] [INFO] Loading module: BumpReminder
+[10-10-2025 12:32:24] [INFO] Loaded module "BumpReminder": modules\BumpReminder
+[10-10-2025 12:32:24] [INFO] Loading module: ExposeGuildData
+[10-10-2025 12:32:24] [INFO] Loaded module "ExposeGuildData": modules\ExposeGuildData
+[10-10-2025 12:32:24] [INFO] Loading module: Users
+[10-10-2025 12:32:24] [INFO] API running at http://localhost:3144
+[10-10-2025 12:32:24] [INFO] Loaded module "Users": modules\Users
+[10-10-2025 12:32:24] [INFO] Loading module: WelcomeMessage
+[10-10-2025 12:32:24] [INFO] Loaded module "WelcomeMessage": modules\WelcomeMessage
+[10-10-2025 12:32:24] [INFO] Client ready! Signed in as Lumix#2650!
