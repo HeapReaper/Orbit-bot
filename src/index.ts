@@ -54,11 +54,11 @@ client.on(DiscordEvents.ClientReady, async (client) => {
   }
 
   // Run migrations
-  try {
-    await runMigrations();
-  } catch (error) {
-    Logging.error(`Error while running migrations: ${error}`);
-  }
+  // try {
+  //   await runMigrations();
+  // } catch (error) {
+  //   Logging.error(`Error while running migrations: ${error}`);
+  // }
 
   // Keeping DB active
   setInterval(async () => {
