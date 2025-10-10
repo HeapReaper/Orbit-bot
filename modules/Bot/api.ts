@@ -53,9 +53,11 @@ export default function registerApi(app: Application, client: Client) {
     next();
   }
 
-  app.post("/api/refresh-commands", checkApiKey, async (req, res) => {
+  // TODO: Add checkApiKey
+  app.post("/api/refresh-commands", async (req, res) => {
     try {
       const guildId = req.query.guildId as string | undefined;
+      console.log("[refresh-commands] Received request", { guildId });
 
       await refreshSlashCommands(guildId);
 
@@ -66,13 +68,13 @@ export default function registerApi(app: Application, client: Client) {
           : "Slash commands refreshed for all guilds",
       });
     } catch (error) {
-      console.error(error);
+      console.error("[refresh-commands] ERROR:", error);
       res.status(500).json({
         success: false,
         error: "Failed to refresh slash commands",
-        // @ts-ignore
-        details: error.message,
+        details: error instanceof Error ? error.message : error,
       });
     }
   });
+
 }
