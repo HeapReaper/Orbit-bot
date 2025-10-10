@@ -32,8 +32,8 @@ model birthdays {
   id         Int      @id @default(autoincrement())
   guild_id   String   @db.VarChar(22)
   user_id    String   @db.VarChar(22)
-  birthdate  DateTime @db.Date
   created_at DateTime @default(now()) @db.DateTime(0)
+  birthdate  DateTime @db.Date
 }
 
 model bot_settings {
@@ -86,4 +86,13 @@ model welcome_message_settings {
   channel    String?  @db.VarChar(22)
   enabled    Int
   created_at DateTime @default(now()) @db.DateTime(0)
+}
+
+model tickets_settings {
+  id           Int      @id @default(autoincrement())
+  guild_id     String   @unique(map: "guild_id") @db.VarChar(22)
+  channel      String?  @db.VarChar(22)
+  channel_conf String?  @db.VarChar(22)
+  enabled      Int
+  created_at   DateTime @default(now()) @db.DateTime(0)
 }
