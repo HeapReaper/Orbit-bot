@@ -32,8 +32,8 @@ model birthdays {
   id         Int      @id @default(autoincrement())
   guild_id   String   @db.VarChar(22)
   user_id    String   @db.VarChar(22)
-  created_at DateTime @default(now()) @db.DateTime(0)
   birthdate  DateTime @db.Date
+  created_at DateTime @default(now()) @db.DateTime(0)
 }
 
 model bot_settings {
