@@ -35,8 +35,6 @@ export default class BumpReminderTasks {
       });
 
       for (const guild of guilds) {
-        console.log(guild);
-
         if (!guild.channel) continue;
 
         const channel = await this.client.channels.fetch(guild.channel as string) as TextChannel;
