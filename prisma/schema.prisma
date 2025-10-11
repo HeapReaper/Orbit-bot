@@ -100,7 +100,7 @@ model tickets_settings {
 
 model bot_log {
   id        Int      @id @default(autoincrement())
-  type      String // INFO, ERROR, WARN
+  type      String
   message   String
   timestamp DateTime @default(now())
 }
@@ -108,7 +108,7 @@ model bot_log {
 model guild_log {
   id        Int      @id @default(autoincrement())
   guild_id  String
-  type      String // INFO, ERROR, WARN
+  type      String
   message   String
   timestamp DateTime @default(now())
 
@@ -118,7 +118,7 @@ model guild_log {
 model dashboard_log {
   id        Int      @id @default(autoincrement())
   guild_id  String
-  type      String // INFO, ERROR, WARN
+  type      String
   message   String
   timestamp DateTime @default(now())
 
