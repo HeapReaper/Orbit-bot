@@ -7,7 +7,6 @@ export default function registerApi(app: Application, client: Client) {
 
   app.use(cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like Postman or server-side)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.indexOf(origin) !== -1) {
@@ -42,6 +41,19 @@ export default function registerApi(app: Application, client: Client) {
       })),
     }));
 
-    res.json({ guilds: guildsData });
+    const totalGuilds = client.guilds.cache.size;
+
+    const userIds = new Set<string>();
+    client.guilds.cache.forEach(guild => {
+      guild.members.cache.forEach(member => userIds.add(member.user.id));
+    });
+    const totalUsers = userIds.size;
+
+    res.json({
+      guilds: guildsData,
+      totalGuilds,
+      totalUsers,
+    });
   });
+
 }
