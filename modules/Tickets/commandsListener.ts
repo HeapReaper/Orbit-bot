@@ -6,10 +6,10 @@ import {
   TextChannel,
   ChannelType,
   PermissionFlagsBits,
-} from 'discord.js';
-import { Logging } from '@utils/logging';
-import {PrismaClient} from '@prisma/client';
-import {GuildLogger} from "@utils/guildLog.ts";
+} from "discord.js";
+import { Logging } from "@utils/logging";
+import {PrismaClient} from "@prisma/client";
+import {GuildLogger} from "@utils/guildLog";
 
 let instance: CommandsListener | null = null;
 
@@ -110,6 +110,8 @@ export default class CommandsListener {
         flags: MessageFlags.Ephemeral
       })
     } catch (error) {
+      // @ts-ignore
+      GuildLogger.error(interaction.guild.id, `Could not make ticket: ${error}`);
       Logging.error(`Error in "ticketManagement": ${error}`);
     }
   }
