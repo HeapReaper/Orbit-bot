@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@clickhouse/client": "^1.12.1",
     "@heapreaper/discordfaker": "^1.1.9",
     "@prisma/client": "^6.17.0",
     "@types/luxon": "^3.7.1",
