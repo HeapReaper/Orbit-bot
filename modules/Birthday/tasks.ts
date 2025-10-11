@@ -60,7 +60,6 @@ export default class Tasks {
       ).setZone("Europe/Amsterdam");
 
       if (birthdayDate.month !== now.month || birthdayDate.day !== now.day) {
-        console.log("AAAAh")
         continue;
       }
 
