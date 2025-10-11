@@ -41,7 +41,7 @@ export default class BumpReminderTasks {
             enabled: 1,
           }
         });
-        await redis.set("bumpReminderSettings", JSON.stringify(guilds), "EX", 120);
+        await redis.set("bumpReminderSettings", JSON.stringify(guilds), "EX", 180);
       }
 
       for (const guild of guilds) {
