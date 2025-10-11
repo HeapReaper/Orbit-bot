@@ -19,7 +19,7 @@ async function loadModules(client: any) {
 
 	for (const moduleFolder of moduleFolders) {
 		let moduleLoaded = false;
-		Logging.info("Loading module: " + moduleFolder);
+		Logging.trace("Loading module: " + moduleFolder);
 		const modulePath = path.join(modulesPath, moduleFolder);
 
 		const initialized = {
@@ -136,7 +136,7 @@ async function loadModules(client: any) {
 		}
 
 		if (moduleLoaded) {
-			Logging.info(`Loaded module "${moduleFolder}": ${modulePath}`);
+			Logging.trace(`Loaded module "${moduleFolder}": ${modulePath}`);
 		} else {
 			Logging.warn(`Module "${moduleFolder}" did not load any components`);
 		}

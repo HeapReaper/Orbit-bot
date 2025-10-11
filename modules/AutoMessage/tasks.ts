@@ -19,7 +19,7 @@ export default class Tasks {
   }
 
   async task() {
-    Logging.info("Running auto message task");
+    Logging.trace("Running auto message task");
 
     const messages = await Database
       .select("auto_message")

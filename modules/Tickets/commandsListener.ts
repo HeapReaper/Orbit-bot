@@ -9,6 +9,7 @@ import {
 } from 'discord.js';
 import { Logging } from '@utils/logging';
 import {PrismaClient} from '@prisma/client';
+import {GuildLogger} from "@utils/guildLog.ts";
 
 let instance: CommandsListener | null = null;
 
@@ -79,6 +80,9 @@ export default class CommandsListener {
   async createTicket(interaction: Interaction, ticketChannel: TextChannel): Promise<void> {
     if (!interaction.isCommand()) return;
 
+    // @ts-ignore
+    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /ticket admins`)
+
     if (!ticketChannel) {
       await interaction.reply({
         content: "A ticket channel has not been configured/disabled yet.",
@@ -112,6 +116,9 @@ export default class CommandsListener {
 
   async closeTicket(interaction: Interaction, data: any): Promise<void> {
     if (!interaction.isCommand()) return;
+
+    // @ts-ignore
+    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /ticket close`)
 
     if (!interaction.channel?.isThread()) {
       await interaction.reply({
