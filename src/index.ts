@@ -12,17 +12,6 @@ import { getEnv } from "@utils/env";
 import { runMigrations } from "@utils/migrations";
 import QueryBuilder from "@utils/database";
 import { createWebServer } from "@utils/api";
-import i18next from "i18next";
-import Backend from "i18next-fs-backend";
-import path from "path";
-
-void i18next.use(Backend).init({
-  lng: "en", // Default
-  fallbackLng: "en",
-  backend: {
-    loadPath: path.join(__dirname, '../locales/{{lng}}/translation.json'),
-  }
-});
 
 const client = new Client({
   intents: [
@@ -80,6 +69,9 @@ client.on(DiscordEvents.ClientReady, async (client) => {
   } catch (error) {
     Logging.error(`Error while loading modules: ${error}`);
   }
+
+
+  await QueryBuilder.isOnline() ? Logging.info("MariaDB online") : Logging.error("MariaDB offline")
 
   Logging.info(`Client ready! Signed in as ${client.user.tag}!`);
 });
