@@ -4,6 +4,7 @@ import {
   Events as DiscordEvents,
 } from "discord.js";
 import Database from "@utils/database";
+import {GuildLogger} from "@utils/guildLog";
 
 let instance: Events | null = null;
 
@@ -16,7 +17,7 @@ export default class Events {
     instance = this;
     this.client.on(DiscordEvents.GuildMemberAdd, async (member) => {
       void this.event(member);
-    })
+    });
   }
 
   async event(member: any) {
@@ -27,14 +28,24 @@ export default class Events {
 
     if (!res) return;
 
-    const channel = await this.client.channels.fetch(res.channel as string) as TextChannel;
+    let channel: TextChannel | null = null;
+    try {
+      const fetchedChannel = await this.client.channels.fetch(res.channel as string);
+      if (fetchedChannel?.isTextBased()) {
+        channel = fetchedChannel as TextChannel;
+      }
+    } catch (err) {
+      GuildLogger.error(res.guild_id, "Welcome message channel could not be fetched. Please configure it again.");
+      return;
+    }
 
-    if (!channel) return;
+    if (!channel) {
+      GuildLogger.error(res.guild_id, "Welcome message channel could not be found. Please configure it again.");
+      return;
+    }
 
     const updatedMessage: string = res.message.replace("{user}", `<@${member.user.id}>`);
 
-    await channel.send({
-      content: (updatedMessage)
-    });
+    await channel.send({ content: updatedMessage });
   }
 }
