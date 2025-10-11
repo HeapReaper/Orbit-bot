@@ -4,7 +4,9 @@ import {
 } from "discord.js";
 import { Logging } from "@utils/logging";
 import { PrismaClient } from "@prisma/client";
+import {getRedisClient} from "@utils/redis.ts";
 
+const redis = getRedisClient();
 let instance: BumpReminderTasks | null = null;
 
 export default class BumpReminderTasks {
@@ -28,11 +30,19 @@ export default class BumpReminderTasks {
     try {
       Logging.trace("Checking if servers can be bumped again!");
 
-      const guilds = await this.prisma.bumpreminder_settings.findMany({
-        where: {
-          enabled: 1,
-        }
-      });
+      let guilds: any[];
+      const cachedData = await redis.get("bumpReminderSettings");
+
+      if (cachedData) {
+        guilds = JSON.parse(cachedData);
+      } else {
+        guilds = await this.prisma.bumpreminder_settings.findMany({
+          where: {
+            enabled: 1,
+          }
+        });
+        await redis.set("bumpReminderSettings", JSON.stringify(guilds), "EX", 120);
+      }
 
       for (const guild of guilds) {
         if (!guild.channel) continue;
