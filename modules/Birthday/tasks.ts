@@ -1,7 +1,6 @@
-import { Client, TextChannel, EmbedBuilder } from "discord.js";
+import { Client, TextChannel } from "discord.js";
 import { Logging } from "@utils/logging";
 import QueryBuilder from "@utils/database";
-import { getEnv } from "@utils/env.ts";
 import cron from "node-cron";
 import { DateTime } from "luxon";
 import {getCurrentTime} from "@utils/dateTime.ts";
@@ -56,13 +55,10 @@ export default class Tasks {
         .where({ guild_id: birthday.guild_id })
         .first()
 
-      console.log(birthdaySettings);
       const birthdayDate = DateTime.fromJSDate(
         new Date(birthday.birthdate),
       ).setZone("Europe/Amsterdam");
 
-      console.log("DATE 1: " + birthdayDate.month + "-" + birthdayDate.day);
-      console.log("DATE 2: " + now.month + "-" + now.day);
       if (birthdayDate.month !== now.month || birthdayDate.day !== now.day) {
         console.log("AAAAh")
         continue;
