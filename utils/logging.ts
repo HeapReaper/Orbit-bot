@@ -2,6 +2,9 @@ import { getEnv } from "@utils/env";
 import chalk from "chalk";
 import { appendFileSync } from "fs";
 import { LogToServer } from "@utils/logToServer";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export class Logging {
 	private static now(): Date {
@@ -11,6 +14,8 @@ export class Logging {
 	static info(message: string | number): void {
 		console.log(`[${this.formatDate(this.now())}] [${chalk.green("INFO")}]  ${message}`);
 
+		void this.saveToDB("INFO", message )
+
 		if (getEnv("LOG_LEVEL") === "info" || getEnv("LOG_LEVEL") === "all") {
 			this.writeToLogFile("INFO", message, this.now());
 		}
@@ -19,6 +24,8 @@ export class Logging {
 	static warn(message: string | number): void {
 		console.log(`[${this.formatDate(this.now())}] [${chalk.yellow("WARN")}]  ${message}`);
 
+		void this.saveToDB("WARN", message )
+
 		if (getEnv("LOG_LEVEL") === "warn" || getEnv("LOG_LEVEL") === "all") {
 			this.writeToLogFile("WARN", message, this.now());
 		}
@@ -26,6 +33,8 @@ export class Logging {
 
 	static error(message: string | number): void {
 		console.log(`[${this.formatDate(this.now())}] [${chalk.red("ERROR")}] ${message}`);
+
+		void this.saveToDB("ERROR", message )
 
 		if (getEnv("LOG_LEVEL") === "error" || getEnv("LOG_LEVEL") === "all") {
 			this.writeToLogFile("ERROR", message, this.now());
@@ -90,6 +99,15 @@ export class Logging {
 
 	private static formatDate(now: Date): string {
 		return `${String(now.getDate()).padStart(2, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getUTCSeconds()).padStart(2, "0")}`;
+	}
+
+	private static async saveToDB(type: string, message: string | number): Promise<void> {
+		await prisma.bot_log.create({
+			data: {
+				type: type,
+				message: `${message}`,
+			}
+		})
 	}
 }
 

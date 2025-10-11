@@ -10,6 +10,7 @@ import {
 import { Logging } from "@utils/logging";
 import QueryBuilder from "@utils/database";
 import { formatDate } from "@utils/formatDate";
+import {GuildLogger} from "@utils/guildLog";
 
 let instance: CommandsListener | null = null;
 
@@ -51,7 +52,9 @@ export default class CommandsListener {
 
   async birthdayAdd(interaction: Interaction): Promise<void> {
     if (!interaction.isCommand()) return;
-    Logging.info("Adding a birthday");
+
+    // @ts-ignore
+    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /birthday add`)
 
     try {
       // @ts-ignore
@@ -99,7 +102,9 @@ export default class CommandsListener {
 
   async birthdayRemove(interaction: Interaction): Promise<void> {
     if (!interaction.isCommand()) return;
-    Logging.info("Deleted a birthday");
+
+    // @ts-ignore
+    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /birthday remove`)
 
     try {
       // @ts-ignore
@@ -141,6 +146,9 @@ export default class CommandsListener {
 
   async birthdayList(interaction: Interaction): Promise<void> {
     if (!interaction.isCommand()) return;
+
+    // @ts-ignore
+    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /birthday list`)
 
     const res = await QueryBuilder
       .select("bot_settings")
