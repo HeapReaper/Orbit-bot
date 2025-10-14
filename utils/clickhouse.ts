@@ -5,11 +5,10 @@ let clickhouseClient: any;
 
 try {
   clickhouseClient = createClient({
-    username: process.env.CLICKHOUSE_USER,
-    password: process.env.CLICKHOUSE_PASS,
-    database: process.env.CLICKHOUSE_DB,
-    host: process.env.CLICKHOUSE_HOST,
     url: process.env.CLICKHOUSE_URL,
+    username: process.env.CLICKHOUSE_USER,
+    database: process.env.CLICKHOUSE_DB,
+    password: process.env.CLICKHOUSE_PASS,
   });
 } catch (err) {
   console.error("Failed to create ClickHouse client:", err);
