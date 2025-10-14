@@ -1,7 +1,7 @@
 import { createClient } from "@clickhouse/client";
 import * as process from "node:process";
 
-let clickhouseClient;
+let clickhouseClient: any;
 
 try {
   clickhouseClient = createClient({

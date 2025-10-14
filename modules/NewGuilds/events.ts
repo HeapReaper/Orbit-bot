@@ -27,7 +27,6 @@ export default class Events {
   async newGuild(guild: any) {
     if (!guild) return;
 
-    // Check if record doesnt exist, if so dont make new one
     await this.prisma.premium_guilds.create({
       data: {
         guild_id: guild.id,
