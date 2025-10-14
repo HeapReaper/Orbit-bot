@@ -21,11 +21,20 @@ class QueryBuilder {
     private _offset!: number ;
 
     static init() {
+        const host = getEnv("DATABASE_HOST") as string;
+        const user = getEnv("DATABASE_USER") as string;
+        const db = getEnv("DATABASE_NAME") as string;
+        Logging.info(`[DB] Trying to connect: host=${host}, user=${user}, db=${db}`);
+
         QueryBuilder.connection = mysql.createConnection({
-            host: <string>getEnv("DATABASE_HOST"),
-            user: <string>getEnv("DATABASE_USER"),
-            password: <string>getEnv("DATABASE_PASSWORD"),
-            database: <string>getEnv("DATABASE_NAME"),
+            host: getEnv("DATABASE_HOST") as string,
+            user: getEnv("DATABASE_USER") as string,
+            password: getEnv("DATABASE_PASSWORD") as string,
+            database: getEnv("DATABASE_NAME") as string,
+        });
+
+        QueryBuilder.connection.on('error', (err) => {
+            Logging.error(`[DB] Connection error: ${err.message}`);
         });
     }
 

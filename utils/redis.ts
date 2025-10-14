@@ -10,6 +10,7 @@ export const getRedisClient = (): Redis => {
     });
 
     // Temp
+    Logging.info(`[Redis] Connecting to ${process.env.REDIS_URL || `${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`}`);
     redis.on('connect', () => Logging.info("Redis connected"));
     redis.on('error', (err) => Logging.error(`Redis error: ${err.message}`));
   }

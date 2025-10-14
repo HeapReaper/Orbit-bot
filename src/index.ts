@@ -35,6 +35,14 @@ const client = new Client({
 client.on(DiscordEvents.ClientReady, async (client) => {
   client.setMaxListeners(20);
 
+  process.on('unhandledRejection', (reason: any) => {
+    console.error("[UNHANDLED REJECTION]", reason);
+  });
+
+  process.on('uncaughtException', (err) => {
+    console.error("[UNCAUGHT EXCEPTION]", err);
+  });
+
   // Load modules
   try {
     await loadModules(client);
@@ -69,7 +77,6 @@ client.on(DiscordEvents.ClientReady, async (client) => {
   } catch (error) {
     Logging.error(`Error while loading modules: ${error}`);
   }
-
 
   await QueryBuilder.isOnline() ? Logging.info("MariaDB online") : Logging.error("MariaDB offline")
 
