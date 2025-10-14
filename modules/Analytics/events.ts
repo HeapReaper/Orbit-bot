@@ -22,19 +22,19 @@ export default class Events {
     //void this.syncAllGuildMembers(this.client);
 
     this.client.on(DiscordEvents.MessageCreate, async (message: Message) => {
-      await this.insertMsg(message);
+      //await this.insertMsg(message);
     });
 
     this.client.on(DiscordEvents.GuildMemberAdd, async (member) => {
-      await this.memberJoined(member);
+      //await this.memberJoined(member);
     });
 
     this.client.on(DiscordEvents.GuildMemberRemove, async (member) => {
-      await this.memberLeft(member);
+      //await this.memberLeft(member);
     });
 
     cron.schedule("0 16 * * *", async () => {
-      await this.syncAllGuildMembers(this.client);
+      //await this.syncAllGuildMembers(this.client);
     })
   }
 
