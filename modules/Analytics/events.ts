@@ -3,7 +3,8 @@ import {
   Message,
   Client,
   Events as DiscordEvents,
-  GuildMember
+  GuildMember,
+  VoiceState
 } from "discord.js";
 import {Logging} from "@utils/logging";
 import cron from "node-cron";
@@ -12,6 +13,7 @@ let instance: Events | null = null;
 
 export default class Events {
   private readonly client;
+  private activeVCs: Map<string, { guildId: string; channelId: string; joinedAt: Date }> = new Map();
 
   constructor(client: Client) {
     this.client = client;
@@ -31,6 +33,10 @@ export default class Events {
 
     this.client.on(DiscordEvents.GuildMemberRemove, async (member) => {
       await this.memberLeft(member);
+    });
+
+    this.client.on(DiscordEvents.VoiceStateUpdate, async (oldState, newState) => {
+      await this.handleVoiceStateUpdate(oldState, newState);
     });
 
     cron.schedule("0 16 * * *", async () => {
@@ -148,5 +154,62 @@ export default class Events {
     }
 
     Logging.info("Syncing all members...");
+  }
+
+  private async handleVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
+    const userId = newState.id;
+    const guildId = newState.guild.id;
+    const key = `${guildId}:${userId}`;
+
+    // User joins a VC
+    if (!oldState.channelId && newState.channelId) {
+      this.activeVCs.set(key, {
+        guildId,
+        channelId: newState.channelId,
+        joinedAt: new Date()
+      });
+      Logging.debug(`User ${userId} joined VC ${newState.channelId}`);
+      return;
+    }
+
+    // User leaves or switches VC
+    if (oldState.channelId && (!newState.channelId || newState.channelId !== oldState.channelId)) {
+      const session = this.activeVCs.get(key);
+      if (!session) return;
+
+      const leftAt = new Date();
+      const duration = Math.floor((leftAt.getTime() - session.joinedAt.getTime()) / 1000);
+
+      try {
+        await clickhouseClient.insert({
+          table: "discord_voice_activity",
+          values: [
+            {
+              guild_id: session.guildId,
+              channel_id: session.channelId,
+              user_id: userId,
+              joined_at: session.joinedAt.toISOString().replace("T", " ").replace("Z", "").split(".")[0],
+              left_at: leftAt.toISOString().replace("T", " ").replace("Z", "").split(".")[0],
+              duration
+            }
+          ],
+          format: "JSONEachRow"
+        });
+
+        Logging.debug(`Saved VC session for ${userId} (${duration}s)`);
+      } catch (error) {
+        Logging.error(`Error saving VC session: ${error}`);
+      }
+
+      this.activeVCs.delete(key);
+
+      if (newState.channelId) {
+        this.activeVCs.set(key, {
+          guildId,
+          channelId: newState.channelId,
+          joinedAt: new Date()
+        });
+      }
+    }
   }
 }
