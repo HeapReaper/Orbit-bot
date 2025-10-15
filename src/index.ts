@@ -3,12 +3,18 @@ import {
   GatewayIntentBits,
   Partials,
   Events as DiscordEvents,
+  ActivityType
 } from "discord.js";
 import loadModules from "@utils/moduleLoader";
 import { Logging } from "@utils/logging";
 import { getEnv } from "@utils/env";
 import { createWebServer } from "@utils/api";
 import { clickhouseClient } from "@utils/clickhouse";
+
+const activityTypes: {name: string, type: ActivityType}[] = [
+  { name: "botinorbit.com", type: ActivityType.Playing},
+  { name: "/help", type: ActivityType.Listening},
+];
 
 async function main() {
   const client = new Client({
@@ -68,6 +74,16 @@ async function main() {
         Logging.error(`Failed to register module API: ${err}`);
       }
     }
+
+    let index: number = 0;
+
+    setInterval(() => {
+      const nextActivityType: {name: string, type: ActivityType} = activityTypes[index];
+
+      client.user.setActivity(nextActivityType.name, {type: nextActivityType.type});
+      // Loop back to start after being on the end
+      index = (index + 1) % activityTypes.length;
+    }, 7000) // 7 seconds
 
     Logging.info(`Client ready! Logged in as ${client.user.tag}`);
   });
