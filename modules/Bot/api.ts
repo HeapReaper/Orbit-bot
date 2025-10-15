@@ -3,6 +3,7 @@ import { Client } from "discord.js";
 import cors from "cors";
 import { refreshSlashCommands } from "@utils/refreshSlashCommands";
 import { getEnv } from "@utils/env";
+import {Logging} from "@utils/logging.ts";
 
 export default function registerApi(app: Application, client: Client) {
   const allowedOrigins = ["http://localhost:3000", "https://botinorbit.com"];
@@ -78,6 +79,8 @@ export default function registerApi(app: Application, client: Client) {
   });
 
   app.get("/api/fetch-info", async (req, res) => {
+    Logging.debug("API call /api/fetch-info");
+
     try {
       const type = req.query.type as "user" | "channel";
       const idsParam = req.query.ids as string;
