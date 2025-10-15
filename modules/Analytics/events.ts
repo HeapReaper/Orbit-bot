@@ -21,8 +21,6 @@ export default class Events {
     if (instance) return instance;
     instance = this;
 
-    void this.syncAllGuildMembers(this.client);
-
     this.client.on(DiscordEvents.MessageCreate, async (message: Message) => {
       await this.insertMsg(message);
     });
