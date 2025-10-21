@@ -26,7 +26,7 @@ export default class Events {
       .where({ guild_id: member.guild.id, enabled: true })
       .first();
 
-    if (!res) return;
+    if (!res || !res.messages?.length) return;
 
     let channel: TextChannel | null = null;
     try {
@@ -44,7 +44,16 @@ export default class Events {
       return;
     }
 
-    const updatedMessage: string = res.message.replace("{user}", `<@${member.user.id}>`);
+    let messageToSend: string;
+    if (res.randomize) {
+      const randomIndex = Math.floor(Math.random() * res.messages.length);
+      messageToSend = res.messages[randomIndex];
+    } else {
+      // standaard het eerste bericht
+      messageToSend = res.messages[0];
+    }
+
+    const updatedMessage = messageToSend.replace(/{user}/g, `<@${member.user.id}>`);
 
     await channel.send({ content: updatedMessage });
   }
