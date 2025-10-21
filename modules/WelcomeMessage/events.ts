@@ -44,13 +44,24 @@ export default class Events {
       return;
     }
 
+    let messages: string[] = [];
+    try {
+      messages = Array.isArray(res.messages)
+        ? res.messages
+        : JSON.parse(res.messages);
+    } catch (err) {
+      GuildLogger.error(res.guild_id, "Could not parse welcome messages array.");
+      return;
+    }
+
+    if (!messages.length) return;
+
     let messageToSend: string;
     if (res.randomize) {
-      const randomIndex = Math.floor(Math.random() * res.messages.length);
-      messageToSend = res.messages[randomIndex];
+      const randomIndex = Math.floor(Math.random() * messages.length);
+      messageToSend = messages[randomIndex];
     } else {
-      // standaard het eerste bericht
-      messageToSend = res.messages[0];
+      messageToSend = messages[0];
     }
 
     const updatedMessage = messageToSend.replace(/{user}/g, `<@${member.user.id}>`);
