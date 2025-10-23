@@ -1,7 +1,8 @@
 import { Client, TextChannel } from "discord.js";
 import cron from "node-cron";
-import Database from "@utils/database";
 import { Logging } from "@utils/logging";
+import {prisma} from "@utils/prisma";
+import { JsonArray } from "@prisma/client/runtime/library";
 
 let instance: Tasks | null = null;
 
@@ -21,10 +22,11 @@ export default class Tasks {
   async task() {
     Logging.trace("Running auto message task");
 
-    const messages = await Database
-      .select("auto_message")
-      .where({ enabled: true })
-      .get();
+    const messages = await prisma.auto_message.findMany({
+      where: {
+        enabled: true,
+      }
+    });
 
     const now = new Date();
 
@@ -43,7 +45,7 @@ export default class Tasks {
     for (const message of messages) {
       if (message.time !== currentTime) continue;
 
-      let days: string[] = [];
+      let days: JsonArray = [];
       try {
         if (typeof message.days === "string") {
           days = JSON.parse(message.days);
