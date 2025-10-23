@@ -2,20 +2,19 @@ import {
   Client,
   TextChannel
 } from "discord.js";
-import { Logging } from "@utils/logging";
-import { PrismaClient } from "@prisma/client";
+import {Logging} from "@utils/logging";
+import {prisma} from "@utils/prisma";
 import {getRedisClient} from "@utils/redis.ts";
+import {GuildLogger} from "@utils/guildLog";
 
 const redis = getRedisClient();
 let instance: BumpReminderTasks | null = null;
 
 export default class BumpReminderTasks {
   private readonly client: Client;
-  private readonly prisma: PrismaClient;
 
   constructor(client: Client) {
     this.client = client;
-    this.prisma = new PrismaClient();
 
     if (instance) return instance;
     instance = this;
@@ -36,7 +35,7 @@ export default class BumpReminderTasks {
       if (cachedData) {
         guilds = JSON.parse(cachedData);
       } else {
-        guilds = await this.prisma.bumpreminder_settings.findMany({
+        guilds = await prisma.bumpreminder_settings.findMany({
           where: {
             enabled: 1,
           }
@@ -45,29 +44,34 @@ export default class BumpReminderTasks {
       }
 
       for (const guild of guilds) {
-        if (!guild.channel) continue;
+        try {
+          if (!guild.channel) continue;
 
-        const channel = await this.client.channels.fetch(guild.channel as string) as TextChannel;
-        const messages = channel.messages.fetch({limit: 20});
+          const channel = await this.client.channels.fetch(guild.channel as string) as TextChannel;
+          const messages = channel.messages.fetch({limit: 20});
 
-        messages.then(async messages => {
-          if (messages.size === 0) return;
+          messages.then(async messages => {
+            if (messages.size === 0) return;
 
-          const lastMessage = messages.first();
-          if (!lastMessage) return;
+            const lastMessage = messages.first();
+            if (!lastMessage) return;
 
-          if (lastMessage?.author.id === this.client.user?.id) return;
+            if (lastMessage?.author.id === this.client.user?.id) return;
 
-          // @ts-ignore
-          if (lastMessage.createdTimestamp < Date.now() - (2 * 60 * 60 * 1000)) {
-            await channel.send({
-              content: guild.message
-            });
-          }
-        });
+            // @ts-ignore
+            if (lastMessage.createdTimestamp < Date.now() - (2 * 60 * 60 * 1000)) {
+              await channel.send({
+                content: guild.message
+              });
+            }
+          });
+        } catch (error) {
+          GuildLogger.error(guild.id, `Error in bump reminder tasks: ${error}`);
+          Logging.warn(`Error in bump reminder tasks: ${error}`);
+        }
       }
-    } catch(e) {
-      Logging.warn(`Error in bump reminder tasks: ${e}`);
+    } catch(error) {
+      Logging.warn(`Error in bump reminder tasks: ${error}`);
     }
   }
 }

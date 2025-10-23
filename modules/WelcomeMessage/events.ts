@@ -3,7 +3,7 @@ import {
   TextChannel,
   Events as DiscordEvents,
 } from "discord.js";
-import Database from "@utils/database";
+import {prisma} from "@utils/prisma.ts";
 import {GuildLogger} from "@utils/guildLog";
 
 let instance: Events | null = null;
@@ -13,20 +13,24 @@ export default class Events {
 
   constructor(client: Client) {
     this.client = client;
+
     if (instance) return instance;
     instance = this;
+
     this.client.on(DiscordEvents.GuildMemberAdd, async (member) => {
       void this.event(member);
     });
   }
 
   async event(member: any) {
-    const res = await Database
-      .select("welcome_message_settings")
-      .where({ guild_id: member.guild.id, enabled: true })
-      .first();
+    const res = await prisma.welcome_message_settings.findFirst({
+      where: {
+        guild_id: member.guild_id,
+        enabled: 1
+      }
+    });
 
-    if (!res || !res.messages?.length) return;
+    if (!res || !res.messages) return;
 
     let channel: TextChannel | null = null;
     try {
@@ -48,6 +52,7 @@ export default class Events {
     try {
       messages = Array.isArray(res.messages)
         ? res.messages
+        // @ts-ignore
         : JSON.parse(res.messages);
     } catch (err) {
       GuildLogger.error(res.guild_id, "Could not parse welcome messages array.");

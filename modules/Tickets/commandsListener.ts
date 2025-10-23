@@ -7,19 +7,17 @@ import {
   ChannelType,
   PermissionFlagsBits,
 } from "discord.js";
-import { Logging } from "@utils/logging";
-import {PrismaClient} from "@prisma/client";
+import {Logging} from "@utils/logging";
+import {prisma} from "@utils/prisma";
 import {GuildLogger} from "@utils/guildLog";
 
 let instance: CommandsListener | null = null;
 
 export default class CommandsListener {
   private readonly client: Client;
-  private prisma: PrismaClient;
 
   constructor(client: Client) {
     this.client = client;
-    this.prisma = new PrismaClient();
 
     if (instance) return instance;
     instance = this;
@@ -33,7 +31,7 @@ export default class CommandsListener {
 
       if (!interaction.guild) return;
 
-      const data= await this.prisma.tickets_settings.findFirst({
+      const data= await prisma.tickets_settings.findFirst({
         where: { guild_id: interaction.guild.id }
       });
 

@@ -3,19 +3,16 @@ import {
   TextChannel,
   Events as DiscordEvents,
 } from "discord.js";
-import Database from "@utils/database";
 import {GuildLogger} from "@utils/guildLog";
-import { PrismaClient } from "@prisma/client";
+import {prisma} from "@utils/prisma";
 
 let instance: Events | null = null;
 
 export default class Events {
   private readonly client: Client;
-  private prisma;
 
   constructor(client: Client) {
     this.client = client;
-    this.prisma = new PrismaClient();
 
     if (instance) return instance;
     instance = this;
@@ -26,7 +23,8 @@ export default class Events {
   }
 
   async event(member: any) {
-    const res = await this.prisma.leave_message_settings.findFirst({
+    // TODO: Add Redis caching
+    const res = await prisma.leave_message_settings.findFirst({
       where: {
         guild_id: member.guild_id,
         enabled: 1,
