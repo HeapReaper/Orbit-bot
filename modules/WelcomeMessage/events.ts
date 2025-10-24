@@ -25,7 +25,7 @@ export default class Events {
   async event(member: any) {
     const res = await prisma.welcome_message_settings.findFirst({
       where: {
-        guild_id: member.guild_id,
+        guild_id: member.guild.id,
         enabled: 1
       }
     });
