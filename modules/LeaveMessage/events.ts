@@ -26,7 +26,7 @@ export default class Events {
     // TODO: Add Redis caching
     const res = await prisma.leave_message_settings.findFirst({
       where: {
-        guild_id: member.guild_id,
+        guild_id: member.guild.id,
         enabled: 1,
       }
     });
