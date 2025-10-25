@@ -28,17 +28,19 @@ export default class Tasks {
     const data = await this.prisma.bot_settings.findMany();
 
     for (const setting of data) {
-      const guild = this.client.guilds.cache.get(setting.guild_id as string) as Guild;
-
+      const guild = this.client.guilds.cache.get(setting.guild_id as string);
       if (!guild) continue;
+      if (!this.client?.user) continue;
 
-      if (!this.client) continue;
+      const botMember = await guild.members.fetch(this.client.user.id);
 
-      if (!this.client.user) continue;
+      const nickname = setting.nickname as string | null;
+      // Skip if nickname is null, undefined, empty string, or "None"
+      if (!nickname || nickname.toLowerCase() === "none") continue;
 
-      const botMember = await guild.members.fetch(this.client.user.id) as GuildMember;
-
-      await botMember.setNickname(setting.nickname as string);
+      await botMember.setNickname(nickname);
+      Logging.info(`Nickname changed to: ${nickname}`);
     }
   }
+
 }
