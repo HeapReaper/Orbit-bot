@@ -208,12 +208,14 @@ model logging_settings {
 }
 
 model minecraft_settings {
-  guild_id   String   @id
-  enabled    Boolean  @default(false)
-  ip         String
-  port       Int      @default(25565)
-  created_at DateTime @default(now())
-  updated_at DateTime
+  guild_id       String   @id
+  enabled        Boolean  @default(false)
+  ip             String
+  port           Int      @default(25565)
+  created_at     DateTime @default(now())
+  updated_at     DateTime
+  channel        String?
+  notify_enabled Boolean  @default(false)
 }
 
 model twitch_watcher {
@@ -251,4 +253,12 @@ model invite_tracker_invite {
   guild_invite_settings guild_invite_settings @relation(fields: [guild_id], references: [guild_id], onDelete: Cascade)
 
   @@index([guild_id])
+}
+
+model auto_role_settings {
+  id         Int      @id @default(autoincrement())
+  guild_id   String   @unique
+  auto_roles Json?
+  enabled    Boolean  @default(false)
+  created_at DateTime @default(now())
 }
