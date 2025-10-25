@@ -38,7 +38,8 @@ export default class Tasks {
 
       const botMember = await guild.members.fetch(this.client.user.id) as GuildMember;
 
-      await botMember.setNickname(setting.nickname as string);
+      // TODO: Fix null issue on reboot
+      //  await botMember.setNickname(setting.nickname as string);
     }
   }
 }
