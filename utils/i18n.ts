@@ -1,36 +1,43 @@
 import fs from "fs";
 import path from "path";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// Root folder of your project (content root)
+const rootPath = process.cwd();
 
-const localesPath = path.join(__dirname, "../src/locales");
+// Path to locales folder
+const localesPath = path.join(rootPath, "locales");
+
+// Get supported languages (folders inside locales)
 const supportedLanguages = fs.readdirSync(localesPath)
-  .filter(file => file.endsWith(".json"))
-  .map(file => file.replace(".json", ""));
+  .filter((folder) => fs.statSync(path.join(localesPath, folder)).isDirectory());
 
 const translations: Record<string, Record<string, string>> = {};
 
+// Load each language's translation.json
 for (const lang of supportedLanguages) {
-  translations[lang] = JSON.parse(fs.readFileSync(path.join(localesPath, lang + ".json"), "utf8"));
+  const filePath = path.join(localesPath, lang, "translation.json");
+  if (fs.existsSync(filePath)) {
+    translations[lang] = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } else {
+    translations[lang] = {};
+  }
 }
 
-export async function t(guildId: string, key: string, variables?: Record<string, string>) {
-  const data = await prisma.bot_settings.findFirst({
-    where: {
-      guild_id: guildId,
-    }
-  });
-
-  const lang = data?.language || "en";
-
-  let text = translations[lang]?.[key] || translations["en"][key] || key;
+/**
+ * Translate a key
+ * @param lang language code e.g. "nl"
+ * @param key translation key e.g. "already_registered"
+ * @param variables optional replacement variables
+ */
+export function t(lang: string, key: string, variables?: Record<string, string>) {
+  let text = translations[lang]?.[key] || translations["en"]?.[key] || key;
 
   if (variables) {
     for (const [k, v] of Object.entries(variables)) {
-      text = text.replace(`{${k}}`, v);
+      text = text.replace(new RegExp(`{${k}}`, "g"), v);
     }
   }
+
   return text;
 }
 

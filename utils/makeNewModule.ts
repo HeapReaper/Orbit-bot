@@ -38,7 +38,10 @@ export default class CommandsListener {
 }
 `;
 
-  const eventsFileWrite = `import { Client, TextChannel } from "discord.js";
+  const eventsFileWrite = `import {
+  Client,
+  Events as DiscordEvents, 
+} from "discord.js";
 
 let instance: Events | null = null;
 

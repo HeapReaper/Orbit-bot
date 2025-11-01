@@ -1,5 +1,7 @@
 {
-  "greeting": "Hallo, {{user}}!",
+  "greeting": "Hallo, {user}!",
   "registered": "Je bent nu geregistreerd!",
-  "already_registered": "Je bent al geregistreerd!"
+  "already_registered": "Je bent al geregistreerd!",
+  "user": "Gebruiker",
+  "message": "Bericht"
 }

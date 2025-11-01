@@ -148,6 +148,7 @@ model channel_of_fame {
   emoji      String?  @db.VarChar(10)
   enabled    Boolean  @default(false)
   created_at DateTime @default(now())
+  amount     Int      @default(0)
 }
 
 model giveaway_settings {
