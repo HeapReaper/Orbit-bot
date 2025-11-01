@@ -69,9 +69,11 @@ export default class Events {
 
       const guildSettings = await getGuildSettings(guildId);
 
+      const hex = guildSettings?.primary_color?.replace("#", "") || "5865F2";
+
       const embed: EmbedBuilder = new EmbedBuilder()
         .setTitle("Channel Of Fame")
-        .setColor(parseInt(guildSettings.primary_color.replace("#", ""), 16) ?? "Purple")
+        .setColor(Number.isNaN(parseInt(hex, 16)) ? 0x5865F2 : parseInt(hex, 16))
         .setDescription(`${t(guildSettings.language, "user")}: <@${reaction.message.author.id}>`)
         .addFields(
           {
