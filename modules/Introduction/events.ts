@@ -57,22 +57,25 @@ export default class Events {
       if (!settings || !settings.enabled) return;
 
       // Determine the target channel
-      const channel = settings.channel
+      const targetChannel = settings.channel
         ? (message.guild.channels.cache.get(settings.channel) as TextChannel)
-        : (message.channel as TextChannel);
+        : null;
 
-      // If no channel found, do nothing
-      if (!channel) return;
+      // If a channel is configured and the message isn't in that channel, ignore
+      if (targetChannel && message.channel.id !== targetChannel.id) return;
+
+      // Use the appropriate channel for auto reply or emoji
+      const channelToUse = targetChannel ?? (message.channel as TextChannel);
 
       // Fetch recent messages from the channel
-      const fetchedMessages = await channel.messages.fetch({ limit: 100 });
+      const fetchedMessages = await channelToUse.messages.fetch({ limit: 100 });
 
       // Count how many messages this user has in this channel
       const userMessagesCount = fetchedMessages.filter(
         (msg) => msg.author.id === message.author.id
       ).size;
 
-      // If above max messages delete the message and dont
+      // If above max messages, delete the message and return
       if (userMessagesCount > settings.maxMessages) {
         await message.delete();
         // TODO: add notification
@@ -81,7 +84,9 @@ export default class Events {
 
       // Send auto reply
       if (settings.autoReply) {
-        await channel.send(settings.autoReply.replace("{user}", `<@${message.author.id}>`));
+        await channelToUse.send(
+          settings.autoReply.replace("{user}", `<@${message.author.id}>`)
+        );
       }
 
       // Add auto emoji if configured
