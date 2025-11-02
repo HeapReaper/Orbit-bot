@@ -14,9 +14,9 @@ interface IntroSettings {
   guild_id: string;
   enabled: boolean;
   channel?: string | null;
-  max_messages: number;
-  auto_reply?: string | null;
-  auto_emoji?: string | null;
+  maxMessages: number;
+  autoReply?: string | null;
+  autoEmoji?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -44,8 +44,8 @@ export default class Events {
         settings = JSON.parse(cached) as IntroSettings;
       } else {
         // Fetch from DB if not in cache
-        settings = await prisma.introduction_settings.findUnique({
-          where: { guild_id: guildId }
+        settings = await prisma.introductionSettings.findUnique({
+          where: { guildId }
         }) as IntroSettings | null;
 
         // Cache in Redis for 3 minutes
@@ -73,23 +73,23 @@ export default class Events {
       ).size;
 
       // If above max messages delete the message and dont
-      if (userMessagesCount > settings.max_messages) {
+      if (userMessagesCount > settings.maxMessages) {
         await message.delete();
         // TODO: add notification
         return;
       }
 
       // Send auto reply
-      if (settings.auto_reply) {
-        await channel.send(settings.auto_reply.replace("{user}", `<@${message.author.id}>`));
+      if (settings.autoReply) {
+        await channel.send(settings.autoReply.replace("{user}", `<@${message.author.id}>`));
       }
 
       // Add auto emoji if configured
-      if (settings.auto_emoji) {
+      if (settings.autoEmoji) {
         try {
-          await message.react(settings.auto_emoji);
+          await message.react(settings.autoEmoji);
         } catch (err) {
-          console.warn("Invalid emoji in settings:", settings.auto_emoji);
+          console.warn("Invalid emoji in settings:", settings.autoEmoji);
         }
       }
     });

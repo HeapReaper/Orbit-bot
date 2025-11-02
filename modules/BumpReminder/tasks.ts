@@ -35,7 +35,7 @@ export default class BumpReminderTasks {
       if (cachedData) {
         guilds = JSON.parse(cachedData);
       } else {
-        guilds = await prisma.bumpreminder_settings.findMany({
+        guilds = await prisma.bumpReminderSettings.findMany({
           where: {
             enabled: 1,
           }

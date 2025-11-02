@@ -24,9 +24,9 @@ export default class Events {
 
   async event(member: any) {
     // TODO: Add Redis caching
-    const res = await prisma.leave_message_settings.findFirst({
+    const res = await prisma.leaveMessageSettings.findFirst({
       where: {
-        guild_id: member.guild.id,
+        guildId: member.guild.id,
         enabled: 1,
       }
     });
@@ -40,12 +40,12 @@ export default class Events {
         channel = fetchedChannel as TextChannel;
       }
     } catch (err) {
-      GuildLogger.error(res.guild_id, "Welcome message channel could not be fetched. Please configure it again.");
+      GuildLogger.error(res.guildId, "Welcome message channel could not be fetched. Please configure it again.");
       return;
     }
 
     if (!channel) {
-      GuildLogger.error(res.guild_id, "Welcome message channel could not be found. Please configure it again.");
+      GuildLogger.error(res.guildId, "Welcome message channel could not be found. Please configure it again.");
       return;
     }
 
@@ -56,7 +56,7 @@ export default class Events {
         // @ts-ignore
         : JSON.parse(res.messages);
     } catch (err) {
-      GuildLogger.error(res.guild_id, "Could not parse welcome messages array.");
+      GuildLogger.error(res.guildId, "Could not parse welcome messages array.");
       return;
     }
 

@@ -27,16 +27,16 @@ export default class Events {
   async newGuild(guild: any) {
     if (!guild) return;
 
-    await this.prisma.premium_guilds.create({
+    await this.prisma.premiumGuild.create({
       data: {
-        guild_id: guild.id,
+        guildId: guild.id,
         premium: true,
-        trial_ends_at: addDays(new Date(), 7),
+        trialEndsAt: addDays(new Date(), 7),
       },
     });
 
     // Send serverowner a message:
     // const owner = await guild.fetchOwner();
-    // owner.send(`Thanks for adding me! Your server has 1 week free premium. Enjoy!`);
+    // owner.send(`Thanks for adding me! Your server has 1 month free premium. Enjoy!`);
   }
 }

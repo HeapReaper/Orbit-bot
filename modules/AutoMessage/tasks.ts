@@ -1,7 +1,7 @@
 import { Client, TextChannel } from "discord.js";
 import cron from "node-cron";
 import { Logging } from "@utils/logging";
-import {prisma} from "@utils/prisma";
+import { prisma } from "@utils/prisma";
 import { JsonArray } from "@prisma/client/runtime/library";
 
 let instance: Tasks | null = null;
@@ -22,7 +22,7 @@ export default class Tasks {
   async task() {
     Logging.trace("Running auto message task");
 
-    const messages = await prisma.auto_message.findMany({
+    const messages = await prisma.autoMessage.findMany({
       where: {
         enabled: true,
       }

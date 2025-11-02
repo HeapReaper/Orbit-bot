@@ -23,19 +23,19 @@ export default class Events {
 
   async addRole(member: any) {
     // TODO: Add Redis caching
-    const res = await prisma.auto_role_settings.findUnique({
+    const res = await prisma.autoRoleSettings.findUnique({
       where: {
-        guild_id: member.guild.id,
+        guildId: member.guild.id,
       }
     });
 
     if (!res || res.enabled !== true) return;
 
-    if (!res?.auto_roles || !Array.isArray(res.auto_roles)) return;
+    if (!res?.autoRoles || !Array.isArray(res.autoRoles)) return;
 
-    const autoRoles: string[] = Array.isArray(res.auto_roles)
-      ? res.auto_roles
-      : JSON.parse(res.auto_roles as string);
+    const autoRoles: string[] = Array.isArray(res.autoRoles)
+      ? res.autoRoles
+      : JSON.parse(res.autoRoles as string);
 
     for (const role of autoRoles) {
       try {
