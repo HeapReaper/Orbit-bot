@@ -25,10 +25,10 @@ export default class Tasks {
   async task() {
     Logging.trace("Running change nickname task in bot/tasks");
 
-    const data = await this.prisma.bot_settings.findMany();
+    const data = await this.prisma.botSettings.findMany();
 
     for (const setting of data) {
-      const guild = this.client.guilds.cache.get(setting.guild_id as string);
+      const guild = this.client.guilds.cache.get(setting.guildId as string);
       if (!guild) continue;
       if (!this.client?.user) continue;
 

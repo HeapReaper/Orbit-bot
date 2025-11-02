@@ -2,9 +2,9 @@ import { Client, TextChannel } from "discord.js";
 import { Logging } from "@utils/logging";
 import cron from "node-cron";
 import { DateTime } from "luxon";
-import {getCurrentTime} from "@utils/dateTime.ts";
-import {prisma} from "@utils/prisma";
-import {getRedisClient} from "@utils/redis";
+import { getCurrentTime } from "@utils/dateTime.ts";
+import { prisma} from "@utils/prisma";
+import { getRedisClient } from "@utils/redis";
 
 let instance: Tasks | null = null;
 
@@ -35,7 +35,7 @@ export default class Tasks {
     if (cachedData) {
       birthdays = JSON.parse(cachedData);
     } else {
-      birthdays = await prisma.birthdays.findMany();
+      birthdays = await prisma.birthday.findMany();
 
       await this.redis.set("birthdays", JSON.stringify(birthdays), "EX", 180);
     }
@@ -45,9 +45,9 @@ export default class Tasks {
     for (const birthday of birthdays) {
       const now: DateTime = DateTime.now().setZone("Europe/Amsterdam");
 
-      const birthdaySettings = await prisma.birthday_settings.findFirst({
+      const birthdaySettings = await prisma.birthdaySettings.findFirst({
         where: {
-          guild_id: birthday.guild_id,
+          guildId: birthday.guildId,
         }
       });
 

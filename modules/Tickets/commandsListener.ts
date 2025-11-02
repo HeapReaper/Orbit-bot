@@ -31,8 +31,8 @@ export default class CommandsListener {
 
       if (!interaction.guild) return;
 
-      const data= await prisma.tickets_settings.findFirst({
-        where: { guild_id: interaction.guild.id }
+      const data= await prisma.ticketSettings.findFirst({
+        where: { guildId: interaction.guild.id }
       });
 
       if (!data) {
@@ -59,7 +59,7 @@ export default class CommandsListener {
 
       const ticketChannel = await this.client.channels.fetch(data.channel as string) as TextChannel;
 
-      const tickedConfidentialChannel = await this.client.channels.fetch(data.channel_conf as string) as TextChannel;
+      const tickedConfidentialChannel = await this.client.channels.fetch(data.channelConf as string) as TextChannel;
 
       switch (subCommandName) {
         case 'admins':

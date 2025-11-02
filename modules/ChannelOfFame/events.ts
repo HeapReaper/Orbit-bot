@@ -59,8 +59,8 @@ export default class Events {
       if (cachedData) {
         settings = JSON.parse(cachedData);
       } else {
-        settings = await prisma.channel_of_fame.findMany({
-          where: { guild_id: guildId },
+        settings = await prisma.channelOfFame.findMany({
+          where: { guildId },
         });
         await redis.set(redisKey, JSON.stringify(settings), "EX", 320);
       }

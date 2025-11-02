@@ -2,9 +2,7 @@ import { getEnv } from "@utils/env";
 import chalk from "chalk";
 import { appendFileSync } from "fs";
 import { LogToServer } from "@utils/logToServer";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@utils/prisma";
 
 export class Logging {
 	private static now(): Date {
@@ -102,7 +100,7 @@ export class Logging {
 	}
 
 	private static async saveToDB(type: string, message: string | number): Promise<void> {
-		await prisma.bot_log.create({
+		await prisma.botLog.create({
 			data: {
 				type: type,
 				message: `${message}`,
