@@ -11,11 +11,6 @@ import { getEnv } from "@utils/env";
 import { createWebServer } from "@utils/api";
 import { clickhouseClient } from "@utils/clickhouse";
 
-const activityTypes: {name: string, type: ActivityType}[] = [
-  { name: "botinorbit.com", type: ActivityType.Playing},
-  { name: "/help", type: ActivityType.Listening},
-];
-
 async function main() {
   const client = new Client({
     intents: [
@@ -33,6 +28,12 @@ async function main() {
 
   client.on(DiscordEvents.ClientReady, async (client) => {
     client.setMaxListeners(20);
+
+    const activityTypes: {name: string, type: ActivityType}[] = [
+      { name: "botinorbit.com", type: ActivityType.Playing},
+      { name: "/help", type: ActivityType.Listening},
+      { name: `In ${client.guilds.cache.size} servers!`, type: ActivityType.Competing},
+    ];
 
     process.on("unhandledRejection", (reason: any) => {
       console.error("[UNHANDLED REJECTION]", reason);
