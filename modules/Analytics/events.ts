@@ -130,30 +130,42 @@ export default class Events {
 
   // TODO: Remove this when db entries are sufficient with all current members
   async syncAllGuildMembers(client: Client) {
+    Logging.info("Starting full member sync...");
+
     for (const [guildId, guild] of client.guilds.cache) {
       await guild.members.fetch();
+
+      const valuesToInsert: any[] = [];
 
       for (const [userId, member] of guild.members.cache) {
         const formatted = member.joinedAt
           ? member.joinedAt.toISOString().replace("T", " ").replace("Z", "").split(".")[0]
           : new Date().toISOString().replace("T", " ").replace("Z", "").split(".")[0];
 
-        await clickhouseClient.insert({
-          table: "discord_membership",
-          values: [
-            {
-              guild_id: guildId,
-              user_id: userId,
-              joined_at: formatted,
-              left_at: null,
-            },
-          ],
-          format: "JSONEachRow",
+        // Prepare values for batch insert
+        valuesToInsert.push({
+          guild_id: guildId,
+          user_id: userId,
+          joined_at: formatted,
+          left_at: null,
         });
+      }
+
+      if (valuesToInsert.length > 0) {
+        try {
+          await clickhouseClient.insert({
+            table: "discord_membership",
+            values: valuesToInsert,
+            format: "JSONEachRow",
+          });
+          Logging.info(`Synced ${valuesToInsert.length} members for guild ${guild.name} (${guildId})`);
+        } catch (err) {
+          Logging.error(`Failed to sync members for guild ${guild.name} (${guildId}): ${err}`);
+        }
       }
     }
 
-    Logging.info("Syncing all members...");
+    Logging.info("Finished syncing all guild members.");
   }
 
   private async handleVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
