@@ -33,21 +33,17 @@ export default class Events {
     if (instance) return instance;
     instance = this;
 
-    // -----------------------------
     // Message Events
-    // -----------------------------
     this.client.on(DiscordEvents.MessageDelete, (msg) => this.messageDelete(msg));
     this.client.on(DiscordEvents.MessageBulkDelete, (msgs) => this.messagesBulkDelete(msgs));
     this.client.on(DiscordEvents.MessageUpdate, (oldMsg, newMsg) => this.messageUpdate(oldMsg, newMsg));
     this.client.on(DiscordEvents.MessageReactionAdd, (reaction, user) => this.reactionAdd(reaction, user));
     this.client.on(DiscordEvents.MessageReactionRemove, (reaction, user) => this.reactionRemove(reaction, user));
     this.client.on(DiscordEvents.MessageReactionRemoveAll, (msg) => this.reactionsCleared(msg));
-    this.client.on(DiscordEvents.MessagePin, (msg) => this.messagePinned(msg));
-    this.client.on(DiscordEvents.MessageUnpin, (msg) => this.messageUnpinned(msg));
+    //this.client.on(DiscordEvents.MessagePin, (msg) => this.messagePinned(msg));
+    //this.client.on(DiscordEvents.MessageUnpin, (msg) => this.messageUnpinned(msg));
 
-    // -----------------------------
     // Member Events
-    // -----------------------------
     this.client.on(DiscordEvents.GuildMemberAdd, (member) => this.memberJoined(member));
     this.client.on(DiscordEvents.GuildMemberRemove, (member) => this.memberLeft(member));
     this.client.on(DiscordEvents.GuildMemberUpdate, async (oldMember, newMember) => {
@@ -58,37 +54,27 @@ export default class Events {
     this.client.on(DiscordEvents.GuildBanAdd, (ban) => this.memberBanned(ban));
     this.client.on(DiscordEvents.GuildBanRemove, (ban) => this.memberUnbanned(ban));
 
-    // -----------------------------
     // Voice Events
-    // -----------------------------
     this.client.on(DiscordEvents.VoiceStateUpdate, (oldState, newState) => this.voiceStateChanged(oldState, newState));
-
-    // -----------------------------
+    
     // Role Events
-    // -----------------------------
-    this.client.on(DiscordEvents.RoleCreate, (role) => this.roleCreated(role));
-    this.client.on(DiscordEvents.RoleDelete, (role) => this.roleDeleted(role));
-    this.client.on(DiscordEvents.RoleUpdate, (oldRole, newRole) => this.roleUpdated(oldRole, newRole));
+    this.client.on(DiscordEvents.GuildRoleCreate, (role) => this.roleCreated(role));
+    this.client.on(DiscordEvents.GuildRoleDelete, (role) => this.roleDeleted(role));
+    this.client.on(DiscordEvents.GuildRoleUpdate, (oldRole, newRole) => this.roleUpdated(oldRole, newRole));
 
-    // -----------------------------
     // Channel Events
-    // -----------------------------
     this.client.on(DiscordEvents.ChannelCreate, (channel) => this.channelCreated(channel));
     this.client.on(DiscordEvents.ChannelDelete, (channel) => this.channelDeleted(channel));
     this.client.on(DiscordEvents.ChannelUpdate, (oldChannel, newChannel) => this.channelUpdated(oldChannel, newChannel));
     this.client.on(DiscordEvents.ChannelPinsUpdate, (channel, time) => this.channelPinsUpdated(channel, time));
 
-    // -----------------------------
     // Thread Events
-    // -----------------------------
     this.client.on(DiscordEvents.ThreadCreate, (thread) => this.threadCreated(thread));
     this.client.on(DiscordEvents.ThreadDelete, (thread) => this.threadDeleted(thread));
     this.client.on(DiscordEvents.ThreadUpdate, (oldThread, newThread) => this.threadUpdated(oldThread, newThread));
     this.client.on(DiscordEvents.ThreadMemberUpdate, (oldMember, newMember) => this.threadMemberChange(oldMember, newMember));
 
-    // -----------------------------
     // Guild Events
-    // -----------------------------
     this.client.on(DiscordEvents.GuildUpdate, (oldGuild, newGuild) => this.guildUpdated(oldGuild, newGuild));
     this.client.on(DiscordEvents.GuildIntegrationsUpdate, (guild) => this.guildIntegrationsUpdated(guild));
     this.client.on(DiscordEvents.GuildEmojisUpdate, (guild, oldEmojis, newEmojis) => this.guildEmojisUpdated(guild));
@@ -96,17 +82,14 @@ export default class Events {
     this.client.on(DiscordEvents.GuildScheduledEventCreate, (event) => this.guildScheduledEventCreated(event));
     this.client.on(DiscordEvents.GuildScheduledEventDelete, (event) => this.guildScheduledEventDeleted(event));
     this.client.on(DiscordEvents.GuildScheduledEventUpdate, (oldEvent, newEvent) => this.guildScheduledEventUpdated(oldEvent, newEvent));
-
-    // -----------------------------
+    
     // Bot & Auto Moderation
-    // -----------------------------
     this.client.on(DiscordEvents.InteractionCreate, (interaction) => this.botCommandUsed(interaction));
     this.client.on(DiscordEvents.GuildAutoModerationRuleCreate, (rule) => this.autoModerationTriggered(rule));
   }
 
-  // -----------------------------
+  
   // Helpers
-  // -----------------------------
   private async getGuildLanguage(guildId: string) {
     const guildSettings = await getGuildSettings(guildId);
     return guildSettings?.language || "en"; // Default english of no language found
@@ -159,9 +142,7 @@ export default class Events {
     await this.sendLogEmbed(guildId, embed);
   }
 
-  // -----------------------------
   // Messages
-  // -----------------------------
   async messageDelete(message: Message | PartialMessage) {
     if (!message.guild) return;
     const lang = await this.getGuildLanguage(message.guild.id);
@@ -302,9 +283,7 @@ export default class Events {
     await this.logIfEnabled(message.guild.id, "message_unpin", embed);
   }
 
-  // -----------------------------
   // Member events
-  // -----------------------------
   async memberJoined(member: GuildMember) {
     const lang = await this.getGuildLanguage(member.guild.id);
 
@@ -459,10 +438,8 @@ export default class Events {
       await this.logIfEnabled(newMember.guild.id, "member_role_remove", embed);
     }
   }
-
-  // -----------------------------
+  
   // Voice events
-  // -----------------------------
   async voiceStateChanged(oldState: VoiceState, newState: VoiceState) {
     if (!oldState.guild) return;
     const lang = await this.getGuildLanguage(oldState.guild.id);
@@ -559,9 +536,7 @@ export default class Events {
     }
   }
 
-  // -----------------------------
   // Role events
-  // -----------------------------
   async roleCreated(role: Role) {
     const lang = await this.getGuildLanguage(role.guild.id);
     let user = t(lang, "unknown");
@@ -635,9 +610,7 @@ export default class Events {
     await this.logIfEnabled(newRole.guild.id, "role_update", embed);
   }
 
-  // -----------------------------
   // Channel events
-  // -----------------------------
   async channelCreated(channel: GuildChannel) {
     const lang = await this.getGuildLanguage(channel.guild.id);
     let user = t(lang, "unknown");
@@ -735,10 +708,8 @@ export default class Events {
 
     await this.logIfEnabled(channel.guild.id, "channel_pins_update", embed);
   }
-
-  // -----------------------------
+  
   // Thread events
-  // -----------------------------
   async threadCreated(thread: ThreadChannel) {
     const lang = await this.getGuildLanguage(thread.guild.id);
 
@@ -843,10 +814,8 @@ export default class Events {
       await this.logIfEnabled(thread.guild.id, "thread_member_leave", embed);
     }
   }
-
-  // -----------------------------
+  
   // Guild events
-  // -----------------------------
   async guildUpdated(oldGuild: any, newGuild: any) {
     const lang = await this.getGuildLanguage(newGuild.id);
     const embed = new EmbedBuilder()
@@ -890,7 +859,7 @@ export default class Events {
     await this.logIfEnabled(guild.id, "guild_stickers_update", embed);
   }
 
-// Scheduled events
+  // Scheduled events
   async guildScheduledEventCreated(event: GuildScheduledEvent) {
     const lang = await this.getGuildLanguage(event.guildId);
     const embed = new EmbedBuilder()
@@ -927,9 +896,7 @@ export default class Events {
     await this.logIfEnabled(newEvent.guildId, "guild_scheduled_event_update", embed);
   }
 
-  // -----------------------------
   // Bot & Auto Moderation
-  // -----------------------------
   async botCommandUsed(interaction: Interaction) {
     if (!interaction.guild) return;
     const lang = await this.getGuildLanguage(interaction.guild.id);
