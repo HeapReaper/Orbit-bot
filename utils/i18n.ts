@@ -1,14 +1,14 @@
 import fs from "fs";
 import path from "path";
 import process from "node:process";
+import {getEnv} from "@utils/env.ts";
 
 let translations: Record<string, Record<string, string>> | null = null;
 
 function loadTranslations() {
   if (translations) return translations; // already loaded
 
-  const rootPath = process.cwd();
-  const localesPath = path.join(rootPath, "locales");
+  const localesPath = path.join(getEnv("MODULES_BASE_PATH") as string, "locales");
 
   const supportedLanguages = fs.readdirSync(localesPath)
     .filter((folder) => fs.statSync(path.join(localesPath, folder)).isDirectory());
