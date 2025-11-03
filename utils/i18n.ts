@@ -1,12 +1,12 @@
 import fs from "fs";
 import path from "path";
-import process from "node:process";
+import { fileURLToPath } from "url";
 
-// Root folder of your project (content root)
-const rootPath = process.cwd();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Path to locales folder
-const localesPath = path.join(process.env.MODULES_BASE_PATH as string, "locales");
+// Adjust based on your folder structure
+const localesPath = path.join(__dirname, "../../locales");
 
 // Get supported languages (folders inside locales)
 const supportedLanguages = fs.readdirSync(localesPath)

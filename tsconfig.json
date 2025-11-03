@@ -6,7 +6,7 @@
       "@utils/*": ["./utils/*"],
       "@src/*": ["./src/*"],
     },
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es2020",
     "moduleResolution": "node",
     "strict": true,
