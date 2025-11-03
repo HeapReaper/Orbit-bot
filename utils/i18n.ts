@@ -1,36 +1,35 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import process from "node:process";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+let translations: Record<string, Record<string, string>> | null = null;
 
-// Adjust based on your folder structure
-const localesPath = path.join(__dirname, "../../locales");
+function loadTranslations() {
+  if (translations) return translations; // already loaded
 
-// Get supported languages (folders inside locales)
-const supportedLanguages = fs.readdirSync(localesPath)
-  .filter((folder) => fs.statSync(path.join(localesPath, folder)).isDirectory());
+  const rootPath = process.cwd();
+  const localesPath = path.join(rootPath, "locales");
 
-const translations: Record<string, Record<string, string>> = {};
+  const supportedLanguages = fs.readdirSync(localesPath)
+    .filter((folder) => fs.statSync(path.join(localesPath, folder)).isDirectory());
 
-// Load each language's translation.json
-for (const lang of supportedLanguages) {
-  const filePath = path.join(localesPath, lang, "translation.json");
-  if (fs.existsSync(filePath)) {
-    translations[lang] = JSON.parse(fs.readFileSync(filePath, "utf8"));
-  } else {
-    translations[lang] = {};
+  const result: Record<string, Record<string, string>> = {};
+
+  for (const lang of supportedLanguages) {
+    const filePath = path.join(localesPath, lang, "translation.json");
+    if (fs.existsSync(filePath)) {
+      result[lang] = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    } else {
+      result[lang] = {};
+    }
   }
+
+  translations = result;
+  return translations;
 }
 
-/**
- * Translate a key
- * @param lang language code e.g. "nl"
- * @param key translation key e.g. "already_registered"
- * @param variables optional replacement variables
- */
 export function t(lang: string, key: string, variables?: Record<string, string>) {
+  const translations = loadTranslations(); // ensure loaded
   let text = translations[lang]?.[key] || translations["en"]?.[key] || key;
 
   if (variables) {
@@ -41,5 +40,3 @@ export function t(lang: string, key: string, variables?: Record<string, string>)
 
   return text;
 }
-
-export const availableLanguages = supportedLanguages;
