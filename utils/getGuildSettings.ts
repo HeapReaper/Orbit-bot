@@ -15,9 +15,9 @@ export default async function getGuildSettings(guildId: string) {
   }
 
   // Cache miss: fetch from database
-  const settings = await prisma.bot_settings.findUnique({
+  const settings = await prisma.botSettings.findUnique({
     where: {
-      guild_id: guildId,
+      guildId,
     },
   });
 
