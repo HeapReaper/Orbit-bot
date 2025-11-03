@@ -62,5 +62,6 @@
   "to": "To",
   "done_by": "By",
   "old_channel": "Old channel",
-  "new_channel": "New channel"
+  "new_channel": "New channel",
+  "channel": "Channel"
 }

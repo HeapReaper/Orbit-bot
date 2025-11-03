@@ -62,5 +62,6 @@
   "to": "Naar",
   "done_by": "Door",
   "old_channel": "oud kanaal",
-  "new_channel": "Nieuw kanaal"
+  "new_channel": "Nieuw kanaal",
+  "channel": "Kanaal"
 }
