@@ -30,10 +30,10 @@ export class GuildLogger {
     return `${String(now.getDate()).padStart(2, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getUTCSeconds()).padStart(2, "0")}`;
   }
 
-  private static async saveToDB(guild_id: string, type: string, message: string | number): Promise<void> {
-    await prisma.guild_log.create({
+  private static async saveToDB(guildId: string, type: string, message: string | number): Promise<void> {
+    await prisma.guildLog.create({
       data: {
-        guild_id: guild_id,
+        guildId,
         type: type,
         message: `${message}`,
       }
