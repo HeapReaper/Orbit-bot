@@ -53,8 +53,19 @@ export default class Events {
 
     if (count > settings.channelLimit) {
       let jailError = false;
+      let muteError = false;
 
       switch (settings.punishment) {
+        case "mute":
+          if (message.member?.manageable) {
+            try {
+              await message.member.timeout(10 * 60 * 1000, "Anti-bot triggered");
+            } catch (err: any) {
+              console.error(`Failed to mute user: ${err}`);
+              if (err.code === 50013) muteError = true;
+            }
+          }
+          break;
         case "kick":
           if (message.member?.kickable) {
             await message.member.kick("Anti-bot triggered");
