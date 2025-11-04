@@ -52,6 +52,8 @@ export default class Events {
     await redis.set(key, count.toString(), "EX", settings.timeWindow);
 
     if (count > settings.channelLimit) {
+      let jailError = false;
+
       switch (settings.punishment) {
         case "kick":
           if (message.member?.kickable) {
@@ -66,12 +68,16 @@ export default class Events {
         case "jail":
           if (settings.jailRole && message.member) {
             const role = message.guild.roles.cache.get(settings.jailRole);
-            if (!role) return;
+            if (!role) break;
 
             try {
               await message.member.roles.add(role, "Anti-bot triggered");
-            } catch (err) {
+            } catch (err: any) {
               console.error(`Failed to add jail role: ${err}`);
+
+              if (err.code === 50013) {
+                jailError = true;
+              }
             }
           }
           break;
@@ -83,7 +89,9 @@ export default class Events {
       if (settings.notificationChannel) {
         const channel = message.guild.channels.cache.get(settings.notificationChannel);
         if (channel && channel.isTextBased()) {
-          await (channel as TextChannel).send(`${message.author.tag} triggered the anti-bot system.`);
+          const baseMsg = `${message.author.tag} triggered the anti-bot system.`;
+          const jailMsg = jailError ? " Could not apply jail role (missing permissions). Maybe the bot role it below the jail role?" : "";
+          await (channel as TextChannel).send(baseMsg + jailMsg);
         }
       }
 
