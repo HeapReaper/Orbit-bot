@@ -21,6 +21,7 @@ import { getRedisClient } from "@utils/redis";
 import { prisma } from "@utils/prisma";
 import getGuildSettings from "@utils/getGuildSettings";
 import { t } from "@utils/i18n";
+import process from "node:process";
 
 const redis = getRedisClient();
 let instance: Events | null = null;
@@ -148,6 +149,10 @@ export default class Events {
     if (!guild) return;
     const logChannel = guild.channels.cache.get(settings.channel);
     if (!logChannel || !logChannel.isTextBased()) return;
+
+    // Dont log if it's debug
+    if (process.env.ENVIRONMENT === "debug") return;
+
     await (logChannel as TextChannel).send({ embeds: [embed] });
   }
 
@@ -336,7 +341,7 @@ export default class Events {
       .setTitle(t(lang, "member_update"))
       .setDescription(`<@${newMember.id}> ${t(lang, "member_updated")}`)
       .setTimestamp();
-
+    return;
     await this.logIfEnabled(newMember.guild.id, "member_update", embed);
   }
 

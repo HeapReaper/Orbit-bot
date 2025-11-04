@@ -63,5 +63,7 @@
   "done_by": "Door",
   "old_channel": "oud kanaal",
   "new_channel": "Nieuw kanaal",
-  "channel": "Kanaal"
+  "channel": "Kanaal",
+  "old_role": "Oude rol",
+  "new_role": "Nieuwe rol"
 }
