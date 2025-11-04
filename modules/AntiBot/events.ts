@@ -100,8 +100,9 @@ export default class Events {
       if (settings.notificationChannel) {
         const channel = message.guild.channels.cache.get(settings.notificationChannel);
         if (channel && channel.isTextBased()) {
+          // TODO: Add translations
           const baseMsg = `${message.author.tag} triggered the anti-bot system.`;
-          const jailMsg = jailError ? " Could not apply jail role (missing permissions). Maybe the bot role it below the jail role?" : "";
+          const jailMsg = jailError ? " Could not apply jail role (missing permissions). Maybe the bot role is below the jail role?" : "";
           await (channel as TextChannel).send(baseMsg + jailMsg);
         }
       }
