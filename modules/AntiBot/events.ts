@@ -66,12 +66,12 @@ export default class Events {
         case "jail":
           if (settings.jailRole && message.member) {
             const role = message.guild.roles.cache.get(settings.jailRole);
-            if (role) {
-              try {
-                await message.member.roles.add(role, "Anti-bot triggered");
-              } catch (err) {
-                console.error(`Failed to add jail role: ${err}`);
-              }
+            if (!role) return;
+
+            try {
+              await message.member.roles.add(role, "Anti-bot triggered");
+            } catch (err) {
+              console.error(`Failed to add jail role: ${err}`);
             }
           }
           break;
@@ -96,15 +96,15 @@ export default class Events {
         message.content.toLowerCase().includes(word.toLowerCase())
       );
 
-      if (foundWord) {
-        await message.delete().catch(() => {});
+      if (!foundWord) return;
 
-        if (settings.notificationChannel) {
-          const channel = message.guild.channels.cache.get(settings.notificationChannel);
-          if (channel && channel.isTextBased()) {
-            await (channel as TextChannel).send(`${message.author.tag} used a forbidden word: ${foundWord}`);
-          }
-        }
+      await message.delete().catch(() => {});
+
+      if (!settings.notificationChannel) return;
+
+      const channel = message.guild.channels.cache.get(settings.notificationChannel);
+      if (channel && channel.isTextBased()) {
+        await (channel as TextChannel).send(`${message.author.tag} used a forbidden word: ${foundWord}`);
       }
     }
   }
