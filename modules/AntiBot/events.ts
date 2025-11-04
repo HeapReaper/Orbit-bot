@@ -87,11 +87,9 @@ export default class Events {
         }
       }
 
-      // Teller resetten
       await redis.del(key);
     }
 
-    // Controle op forbidden words
     if (Array.isArray(settings.forbiddenWords) && settings.forbiddenWords.length > 0) {
       const forbiddenWords: string[] = settings.forbiddenWords;
       const foundWord = forbiddenWords.find(word =>
