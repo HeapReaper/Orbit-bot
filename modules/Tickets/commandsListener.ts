@@ -8,7 +8,7 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import {Logging} from "@utils/logging";
-import {prisma} from "@utils/prisma";
+import { prisma } from "@utils/prisma";
 import {GuildLogger} from "@utils/guildLog";
 
 let instance: CommandsListener | null = null;
@@ -31,6 +31,7 @@ export default class CommandsListener {
 
       if (!interaction.guild) return;
 
+      // TODO: Add caching
       const data= await prisma.ticketSettings.findFirst({
         where: { guildId: interaction.guild.id }
       });
@@ -59,7 +60,24 @@ export default class CommandsListener {
 
       const ticketChannel = await this.client.channels.fetch(data.channel as string) as TextChannel;
 
+      if (!ticketChannel) {
+        await interaction.reply({
+          content: "Oops, something went wrong!",
+          flags: MessageFlags.Ephemeral,
+        });
+        Logging.error(`Could not find ticketChannel`)
+        return;
+      }
       const tickedConfidentialChannel = await this.client.channels.fetch(data.channelConf as string) as TextChannel;
+
+      if (!tickedConfidentialChannel) {
+        await interaction.reply({
+          content: "Oops, something went wrong!",
+          flags: MessageFlags.Ephemeral,
+        });
+        Logging.error(`Could not find ticketChannel`)
+        return;
+      }
 
       switch (subCommandName) {
         case 'admins':
