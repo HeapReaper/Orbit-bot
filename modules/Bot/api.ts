@@ -58,7 +58,7 @@ export default function registerApi(app: Application, client: Client) {
         success: true,
         message: guildId
           ? `Slash commands refreshed for guild ${guildId}`
-          : "Slash commands refreshed for all guilds",
+          : "Slash commands refreshed for specified guild",
       });
     } catch (error) {
       console.error("[refresh-commands] ERROR:", error);
