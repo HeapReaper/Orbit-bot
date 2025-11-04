@@ -4,9 +4,8 @@ import fs from "fs/promises";
 import path from "path";
 import { Logging } from "@utils/logging";
 import { getEnv } from "@utils/env";
-import { prisma } from "@utils/prisma";
 
-export async function refreshSlashCommands(guildId?: string, global = false): Promise<void> {
+export async function refreshSlashCommands(global = false): Promise<void> {
   const modulesPath: string = path.join(getEnv("MODULES_BASE_PATH") as string, "modules");
   const modulesFolder: string[] = await fs.readdir(modulesPath);
   const rest = new REST({ version: "10" }).setToken(getEnv("DISCORD_TOKEN")!);
@@ -27,20 +26,8 @@ export async function refreshSlashCommands(guildId?: string, global = false): Pr
     }
   }
 
-  // Determine targets
-  let targets: string[] = [];
-  if (guildId && !global) {
-    targets = [guildId];
-  } else if (!global) {
-    // Fetch all guild IDs from DB
-    const botSettings = await prisma.botSettings.findMany({
-      select: { guildId: true },
-    });
-    targets = botSettings.map((s: any) => s.guild_id).filter(Boolean);
-  }
-
-  // Sync commands
   if (global) {
+    // Sync globally
     try {
       await rest.put(
         Routes.applicationCommands(getEnv("CLIENT_ID")!),
@@ -51,20 +38,22 @@ export async function refreshSlashCommands(guildId?: string, global = false): Pr
       Logging.error(`Failed to sync global commands: ${error}`);
     }
   } else {
-    for (const guild of targets) {
-      try {
-        await rest.put(
-          Routes.applicationGuildCommands(getEnv("CLIENT_ID")!, guild),
-          { body: [] } // clear old commands
-        );
-        await rest.put(
-          Routes.applicationGuildCommands(getEnv("CLIENT_ID")!, guild),
-          { body: allCommands }
-        );
-        Logging.info(`Successfully synced commands for guild: ${guild}`);
-      } catch (error) {
-        Logging.error(`Failed to sync commands for guild ${guild}: ${error}`);
+    // Refresh for all guilds the bot is in
+    try {
+      const guilds = await rest.get(Routes.userGuilds()) as { id: string }[];
+      for (const guild of guilds) {
+        try {
+          await rest.put(
+            Routes.applicationGuildCommands(getEnv("CLIENT_ID")!, guild.id),
+            { body: allCommands }
+          );
+          Logging.info(`Successfully synced commands for guild: ${guild.id}`);
+        } catch (error) {
+          Logging.error(`Failed to sync commands for guild ${guild.id}: ${error}`);
+        }
       }
+    } catch (error) {
+      Logging.error(`Failed to fetch guilds: ${error}`);
     }
   }
 }
