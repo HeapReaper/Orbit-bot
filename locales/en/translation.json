@@ -63,5 +63,7 @@
   "done_by": "By",
   "old_channel": "Old channel",
   "new_channel": "New channel",
-  "channel": "Channel"
+  "channel": "Channel",
+  "old_role": "Old role",
+  "new_role": "New role"
 }
