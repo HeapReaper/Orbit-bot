@@ -49,8 +49,8 @@ export default function registerApi(app: Application, client: Client) {
       return res.status(401).json({ error: "Unauthorized" });
 
     try {
-      const guildId = req.query.guildId as string | undefined;
-      console.log("[refresh-commands] Received request", { guildId });
+      const { guildId } = req.body as { guildId?: string };
+      console.log("[refresh-commands] Received request: ", { guildId });
 
       await refreshSlashCommands(guildId);
 
