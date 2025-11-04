@@ -43,19 +43,11 @@ export default function registerApi(app: Application, client: Client) {
     });
   });
 
-  function checkApiKey(req: any, res: any, next: any ) {
-    const apiKey = req.headers["x-api-key"];
-    const validKey = getEnv("API_KEY");
-
-    if (!apiKey || apiKey !== validKey) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    next();
-  }
-
   // TODO: Add checkApiKey
   app.post("/api/refresh-commands", async (req, res) => {
+    if (!req.headers["x-api-key"] || req.headers["x-api-key"] !== getEnv("API_KEY"))
+      return res.status(401).json({ error: "Unauthorized" });
+
     try {
       const guildId = req.query.guildId as string | undefined;
       console.log("[refresh-commands] Received request", { guildId });
