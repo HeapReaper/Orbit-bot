@@ -21,6 +21,7 @@ import { getRedisClient } from "@utils/redis";
 import { prisma } from "@utils/prisma";
 import getGuildSettings from "@utils/getGuildSettings";
 import { t } from "@utils/i18n";
+
 const redis = getRedisClient();
 let instance: Events | null = null;
 
@@ -88,11 +89,24 @@ export default class Events {
     this.client.on(DiscordEvents.GuildAutoModerationRuleCreate, (rule) => this.autoModerationTriggered(rule));
   }
 
-  
   // Helpers
+  private async persistGuildLog(guildId: string, type: string, message: string) {
+    try {
+      await prisma.guildLog.create({
+        data: {
+          guildId,
+          type,
+          message,
+        },
+      });
+    } catch (err) {
+      console.error(`Failed to persist log for guild ${guildId}:`, err);
+    }
+  }
+
   private async getGuildLanguage(guildId: string) {
     const guildSettings = await getGuildSettings(guildId);
-    return guildSettings?.language || "en"; // Default english of no language found
+    return guildSettings?.language || "en"; // Default english if no language was found
   }
 
   private async isEventEnabled(guildId: string, eventKey: string) {
@@ -145,6 +159,7 @@ export default class Events {
   // Messages
   async messageDelete(message: Message | PartialMessage) {
     if (!message.guild) return;
+
     const lang = await this.getGuildLanguage(message.guild.id);
     const embed = new EmbedBuilder()
       .setColor(Colors.Red)
@@ -154,6 +169,7 @@ export default class Events {
         { name: t(lang, "message"), value: message.content?.substring(0, 1000) ?? t(lang, "none") }
       )
       .setTimestamp();
+
     await this.logIfEnabled(message.guild.id, "message_delete", embed);
   }
 

@@ -3,13 +3,11 @@ import { Routes } from "discord-api-types/v10";
 import fs from "fs/promises";
 import path from "path";
 import { Logging } from "@utils/logging";
-import { getEnv } from "@utils/env.ts";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { getEnv } from "@utils/env";
+import { prisma } from "@utils/prisma";
 
 export async function refreshSlashCommands(guildId?: string): Promise<void> {
-  const modulesPath: string = path.join(process.cwd(), "modules");
+  const modulesPath: string = path.join(getEnv("MODULES_BASE_PATH") as string, "modules")
   const modulesFolder: string[] = await fs.readdir(modulesPath);
   const rest = new REST({ version: "10" }).setToken(getEnv("DISCORD_TOKEN")!);
 
@@ -43,10 +41,10 @@ export async function refreshSlashCommands(guildId?: string): Promise<void> {
   if (guildId) {
     guildsToRefresh = [guildId];
   } else {
-    const botSettings = await prisma.bot_settings.findMany({
-      select: { guild_id: true },
+    const botSettings = await prisma.botSettings.findMany({
+      select: { guildId: true },
     });
-    guildsToRefresh = botSettings.map((s) => s.guild_id).filter(Boolean);
+    guildsToRefresh = botSettings.map((s: any) => s.guild_id).filter(Boolean);
   }
 
   // Sync commands for each guild
@@ -62,9 +60,9 @@ export async function refreshSlashCommands(guildId?: string): Promise<void> {
         { body: allCommands }
       );
 
-      Logging.info(`✅ Successfully synced commands for guild: ${guild}`);
+      Logging.info(`Successfully synced commands for guild: ${guild}`);
     } catch (error) {
-      Logging.error(`❌ Failed to sync commands for guild ${guild}: ${error}`);
+      Logging.error(`Failed to sync commands for guild ${guild}: ${error}`);
     }
   }
 }
