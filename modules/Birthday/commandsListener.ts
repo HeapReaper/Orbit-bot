@@ -5,12 +5,13 @@ import {
   MessageFlags,
   PermissionsBitField,
   EmbedBuilder,
-  ColorResolvable
+  ColorResolvable,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { Logging } from "@utils/logging";
-import QueryBuilder from "@utils/database";
 import { formatDate } from "@utils/formatDate";
-import {GuildLogger} from "@utils/guildLog";
+import { GuildLogger } from "@utils/guildLog";
+import { prisma } from "@utils/prisma";
 
 let instance: CommandsListener | null = null;
 
@@ -26,48 +27,52 @@ export default class CommandsListener {
   }
 
   async commandListener(): Promise<void> {
-    this.client.on(Events.InteractionCreate, async (interaction: Interaction): Promise<void> => {
-        if (!interaction.isCommand()) return;
+    this.client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+      if (!interaction.isCommand()) return;
 
-        const { commandName } = interaction;
-        // @ts-ignore
-        const subCommandName: string | null = interaction.options.getSubcommand(false);
+      const { commandName } = interaction;
+      let subCommandName: string | null = null;
 
-        if (commandName !== "birthday") return;
+      if (interaction.isChatInputCommand()) {
+        subCommandName = interaction.options.getSubcommand(false);
+      }
 
-        switch (subCommandName) {
-          case "add":
+      if (commandName !== "birthday") return;
+
+      switch (subCommandName) {
+        case "add":
+          if (interaction.isChatInputCommand()) {
             void this.birthdayAdd(interaction);
-            break;
-          case "delete":
-            void this.birthdayRemove(interaction);
-            break;
-          case "list":
-            void this.birthdayList(interaction);
-            break;
-        }
-      },
-    );
+          }
+          break;
+        case "delete":
+          void this.birthdayRemove(interaction);
+          break;
+        case "list":
+          void this.birthdayList(interaction);
+          break;
+      }
+    });
   }
 
-  async birthdayAdd(interaction: Interaction): Promise<void> {
-    if (!interaction.isCommand()) return;
+  async birthdayAdd(interaction: ChatInputCommandInteraction): Promise<void> {
+    if (!interaction.guild) return;
 
-    // @ts-ignore
-    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /birthday add`)
+    GuildLogger.info(
+      interaction.guild.id,
+      `User ${interaction.user.username} ran the command /birthday add`
+    );
 
     try {
-      // @ts-ignore
-      if (
-        (await QueryBuilder.select("birthdays")
-          .where({
-            user_id: interaction.user.id,
-            // @ts-ignore
-            guild_id: interaction.guild.id
-          })
-          .count()
-          .get()) !== 0
-      ) {
+      // Check if birthday already exists
+      const existingBirthday = await prisma.birthday.findFirst({
+        where: {
+          userId: interaction.user.id,
+          guildId: interaction.guild.id,
+        },
+      });
+
+      if (existingBirthday) {
         await interaction.reply({
           content: "You already added yourself to the birthday function!",
           flags: MessageFlags.Ephemeral,
@@ -75,136 +80,141 @@ export default class CommandsListener {
         return;
       }
 
-      await QueryBuilder.insert("birthdays")
-        .values({
-          user_id: interaction.user.id,
-          // @ts-ignore
-          birthdate: `${interaction.options.getInteger("year")}-${interaction.options.getInteger("month")}-${interaction.options.getInteger("day")}`,
-          // @ts-ignore
-          guild_id: interaction.guild.id,
-        })
-        .execute();
+      // Get birthdate from options
+      const year = interaction.options.getInteger("year");
+      const month = interaction.options.getInteger("month");
+      const day = interaction.options.getInteger("day");
 
-      await interaction.reply({
-        content: "Your birthday has been added! ",
-        flags: MessageFlags.Ephemeral,
-      });
-    } catch (error) {
-      Logging.error(`Error inside commandListener for Birthday: ${error}`);
-      await interaction.reply({
-        content:
-          "Oops, something went wrong...",
-        flags: MessageFlags.Ephemeral,
-      });
-      return;
-    }
-  }
-
-  async birthdayRemove(interaction: Interaction): Promise<void> {
-    if (!interaction.isCommand()) return;
-
-    // @ts-ignore
-    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /birthday remove`)
-
-    try {
-      // @ts-ignore
-      if (
-        (await QueryBuilder.select("birthdays")
-          .where({
-            user_id: interaction.user.id,
-            // @ts-ignore
-            guild_id: interaction.guild.id,
-          })
-          .count()
-          .get()) === 0
-      ) {
+      if (!year || !month || !day) {
         await interaction.reply({
-          content: "You ain't in our bot!",
+          content: "Invalid date provided.",
           flags: MessageFlags.Ephemeral,
         });
         return;
       }
 
-      await QueryBuilder.delete("birthdays")
-        .where({ user_id: interaction.user.id })
-        .execute();
+      const birthdate = new Date(year, month - 1, day);
+
+      await prisma.birthday.create({
+        data: {
+          guildId: interaction.guild.id,
+          userId: interaction.user.id,
+          birthdate,
+        },
+      });
+
+      await interaction.reply({
+        content: "Your birthday has been added!",
+        flags: MessageFlags.Ephemeral,
+      });
+    } catch (error) {
+      Logging.error(`Error adding birthday: ${error}`);
+      await interaction.reply({
+        content: "Oops, something went wrong...",
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+  }
+
+  async birthdayRemove(interaction: Interaction): Promise<void> {
+    if (!interaction.isCommand() || !interaction.guild) return;
+
+    GuildLogger.info(
+      interaction.guild.id,
+      `User ${interaction.user.username} ran the command /birthday remove`
+    );
+
+    try {
+      const existingBirthday = await prisma.birthday.findFirst({
+        where: {
+          userId: interaction.user.id,
+          guildId: interaction.guild.id,
+        },
+      });
+
+      if (!existingBirthday) {
+        await interaction.reply({
+          content: "You aren't in our birthday list!",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      await prisma.birthday.deleteMany({
+        where: {
+          userId: interaction.user.id,
+          guildId: interaction.guild.id,
+        },
+      });
 
       await interaction.reply({
         content: "Your birthday has been deleted!",
         flags: MessageFlags.Ephemeral,
       });
     } catch (error) {
-      Logging.error(`Something went wrong while deleting birthday: ${error}`);
+      Logging.error(`Error deleting birthday: ${error}`);
       await interaction.reply({
-        content:
-          "Oops, something went wrong...",
+        content: "Oops, something went wrong...",
         flags: MessageFlags.Ephemeral,
       });
-      return;
     }
   }
 
   async birthdayList(interaction: Interaction): Promise<void> {
-    if (!interaction.isCommand()) return;
+    if (!interaction.isCommand() || !interaction.guild) return;
 
-    // @ts-ignore
-    GuildLogger.info(interaction.guild.id, `User ${interaction.user.displayName} ran the command /birthday list`)
+    GuildLogger.info(
+      interaction.guild.id,
+      `User ${interaction.user.username} ran the command /birthday list`
+    );
 
-    const res = await QueryBuilder
-      .select("bot_settings")
-      .first();
+    // Fetch bot settings (for embed color)
+    const res = await prisma.botSettings.findFirst();
 
     if (!interaction.member) {
       await interaction.reply({
         content: "Oops, something went wrong...",
         flags: MessageFlags.Ephemeral,
       });
-
       return;
     }
 
-    if (
-      // @ts-ignore
-      !interaction.member.permissions.has(
-        PermissionsBitField.Flags.ManageMessages,
-      )
-    ) {
+    // Check permissions
+    // @ts-ignore
+    if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
       await interaction.reply({
         content: "Oops, you're missing the right permissions!",
         flags: MessageFlags.Ephemeral,
       });
-
       return;
     }
 
     try {
-      const birthdays = await QueryBuilder
-        .select("birthdays")
-        // @ts-ignore
-        .where({ guild_id: interaction.guild.id })
-        .execute();
+      const birthdays = await prisma.birthday.findMany({
+        where: {
+          guildId: interaction.guild.id,
+        },
+      });
 
       const embed = new EmbedBuilder()
-        .setColor(res.primary_color as ColorResolvable)
+        .setColor((res?.primaryColor as ColorResolvable) ?? "Blue")
         .setTitle("Birthdays");
 
       for (const birthday of birthdays) {
-        const user = await this.client.users.fetch(birthday.user_id);
-
+        const user = await this.client.users.fetch(birthday.userId);
         embed.addFields({
-          name: user ? user.displayName : birthday.user_id,
+          name: user ? user.username : birthday.userId,
           value: formatDate(birthday.birthdate),
         });
       }
 
       await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
     } catch (error) {
-      Logging.error(`Error inside birthday: ${error}`);
+      Logging.error(`Error listing birthdays: ${error}`);
       await interaction.reply({
         content: "Oops, something went wrong...",
         flags: MessageFlags.Ephemeral,
-      })
+      });
     }
-
   }
 }
