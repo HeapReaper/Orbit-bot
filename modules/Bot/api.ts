@@ -49,8 +49,9 @@ export default function registerApi(app: Application, client: Client) {
       return res.status(401).json({ error: "Unauthorized" });
 
     try {
-      const { guildId } = req.body as { guildId?: string };
-      console.log("[refresh-commands] Received request: ", { guildId });
+      // Read guildId from query string
+      const guildId = req.query.guildId as string | undefined;
+      console.log("[refresh-commands] Received request:", { guildId });
 
       await refreshSlashCommands(guildId);
 
@@ -58,7 +59,7 @@ export default function registerApi(app: Application, client: Client) {
         success: true,
         message: guildId
           ? `Slash commands refreshed for guild ${guildId}`
-          : "Slash commands refreshed for specified guild",
+          : "Slash commands refreshed globally",
       });
     } catch (error) {
       console.error("[refresh-commands] ERROR:", error);
@@ -69,6 +70,7 @@ export default function registerApi(app: Application, client: Client) {
       });
     }
   });
+
 
   app.get("/api/fetch-info", async (req, res) => {
     Logging.debug("API call /api/fetch-info");
