@@ -181,7 +181,9 @@ export default class Events {
   async messagesBulkDelete(messages: any) {
     const guild = messages.first()?.guild;
     if (!guild) return;
+
     const lang = await this.getGuildLanguage(guild.id);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.DarkRed)
       .setTitle(t(lang, "messages_deleted"))
@@ -192,7 +194,19 @@ export default class Events {
 
   async messageUpdate(oldMessage: Message | PartialMessage, newMessage: Message) {
     if (!oldMessage.guild || oldMessage.content === newMessage.content) return;
+
     const lang = await this.getGuildLanguage(oldMessage.guild.id);
+
+    // Fetch full message if oldMessage is partial
+    if (oldMessage.partial) {
+      try {
+        oldMessage = await oldMessage.fetch();
+      } catch (err) {
+        console.error("Failed to fetch old message:", err);
+        return;
+      }
+    }
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "message_edit"))
@@ -202,6 +216,8 @@ export default class Events {
         { name: t(lang, "new_message"), value: newMessage.content?.substring(0, 1000) ?? t(lang, "none") }
       )
       .setTimestamp();
+
+    // @ts-ignore
     await this.logIfEnabled(oldMessage.guild.id, "message_edit", embed);
   }
 
@@ -336,12 +352,27 @@ export default class Events {
   async memberUpdated(oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) {
     const lang = await this.getGuildLanguage(newMember.guild.id);
 
+    // Fetch full member if oldMember is partial
+    if (oldMember.partial) {
+      try {
+        oldMember = await oldMember.fetch();
+      } catch (err) {
+        console.error("Failed to fetch old member:", err);
+        return;
+      }
+    }
+
+    if (oldMember.displayName === newMember.displayName) return;
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "member_update"))
       .setDescription(`<@${newMember.id}> ${t(lang, "member_updated")}`)
+      .addFields(
+        { name: t(lang, "old_name"), value: `${oldMember.displayName ?? "Unknown"}` },
+        { name: t(lang, "new_name"), value: `${newMember.displayName ?? "Unknown"}` },
+      )
       .setTimestamp();
-    return;
     await this.logIfEnabled(newMember.guild.id, "member_update", embed);
   }
 
@@ -618,6 +649,8 @@ export default class Events {
       console.warn("Failed to fetch audit log for role update:", err);
     }
 
+    if (oldRole.name === newRole.name) return;
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "role_update"))
@@ -691,6 +724,8 @@ export default class Events {
     } catch (err) {
       console.warn("Failed to fetch audit log for channel update:", err);
     }
+
+    if (oldChannel.name === newChannel.name) return;
 
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
@@ -790,6 +825,8 @@ export default class Events {
     } catch (err) {
       console.warn("Failed to fetch audit log for thread update:", err);
     }
+
+    if (oldThread.name === newThread.name) return;
 
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
