@@ -65,5 +65,7 @@
   "new_channel": "New channel",
   "channel": "Channel",
   "old_role": "Old role",
-  "new_role": "New role"
+  "new_role": "New role",
+  "old_name": "Old name",
+  "new_name": "New name"
 }
