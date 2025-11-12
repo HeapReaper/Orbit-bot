@@ -207,6 +207,8 @@ export default class Events {
       }
     }
 
+    if (oldMessage.content === newMessage.content) return;
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "message_edit"))
