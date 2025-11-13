@@ -10,6 +10,7 @@ import { Logging } from "@utils/logging";
 import { getEnv } from "@utils/env";
 import { createWebServer } from "@utils/api";
 import { clickhouseClient } from "@utils/clickhouse";
+import { refreshSlashCommands } from "@utils/refreshSlashCommands";
 
 async function main() {
   const client = new Client({
@@ -28,6 +29,9 @@ async function main() {
 
   client.on(DiscordEvents.ClientReady, async (client) => {
     client.setMaxListeners(20);
+    if (process.env.ENVIRONMENT !== "debug") {
+      await refreshSlashCommands(true);
+    }
 
     const activityTypes: {name: string, type: ActivityType}[] = [
       { name: "botinorbit.com", type: ActivityType.Playing},
