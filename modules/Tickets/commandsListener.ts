@@ -31,6 +31,12 @@ export default class CommandsListener {
 
       if (!interaction.guild) return;
 
+      const { commandName } = interaction;
+      // @ts-ignore
+      const subCommandName: string | null = interaction.options.getSubcommand(false); // `false` = required = false
+
+      if (commandName !== 'ticket') return;
+
       // TODO: Add caching
       const data= await prisma.ticketSettings.findFirst({
         where: { guildId: interaction.guild.id }
@@ -51,12 +57,6 @@ export default class CommandsListener {
         });
         return;
       }
-
-      const { commandName } = interaction;
-      // @ts-ignore
-      const subCommandName: string | null = interaction.options.getSubcommand(false); // `false` = required = false
-
-      if (commandName !== 'ticket') return;
 
       const ticketChannel = await this.client.channels.fetch(data.channel as string) as TextChannel;
 

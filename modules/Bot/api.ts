@@ -53,7 +53,7 @@ export default function registerApi(app: Application, client: Client) {
       const guildId = req.query.guildId as string | undefined;
       console.log("[refresh-commands] Received request:", { guildId });
 
-      await refreshSlashCommands(guildId);
+      await refreshSlashCommands(true);
 
       res.json({
         success: true,

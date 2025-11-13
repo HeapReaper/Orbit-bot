@@ -46,7 +46,9 @@ export default class CommandsListener {
       }
     });
 
+    console.log(data);
     if (!data) {
+      console.log("Heee");
       await interaction.reply({
         content: "Module hasn't been configured yet.",
         flags: MessageFlags.Ephemeral
@@ -54,7 +56,10 @@ export default class CommandsListener {
       return
     }
 
+    console.log(data.enabled)
     if (!data.enabled) {
+      console.log("Hoop");
+
       await interaction.reply({
         content: "Module hasn't been enabled yet.",
         flags: MessageFlags.Ephemeral
@@ -86,6 +91,8 @@ export default class CommandsListener {
       )
       .setTimestamp()
       .setFooter({ text: "Minecraft Server Info" });
+
+    await interaction.reply({ embeds: [embed] });
   }
 
   async getMinecraftPlayers(host: string, port: number = 25565) {
