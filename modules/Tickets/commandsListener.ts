@@ -38,7 +38,7 @@ export default class CommandsListener {
 
       if (!data) {
         await interaction.reply({
-          content: "Tickets module hasn't been configured/disabled yet.",
+          content: "Module hasn't been configured/enabled yet.",
           flags: MessageFlags.Ephemeral
         });
         return;
@@ -46,7 +46,7 @@ export default class CommandsListener {
 
       if (data.enabled !== 1) {
         await interaction.reply({
-          content: "Tickets module isn't enabled.",
+          content: "Module isn't enabled.",
           flags: MessageFlags.Ephemeral
         });
         return;
@@ -101,7 +101,7 @@ export default class CommandsListener {
 
     if (!ticketChannel) {
       await interaction.reply({
-        content: "A ticket channel has not been configured/disabled yet.",
+        content: "A ticket channel has not been configured/enabled yet.",
         flags: MessageFlags.Ephemeral
       })
     }
