@@ -459,8 +459,18 @@ export default class Events {
 
     let user = t(lang, "unknown");
     try {
-      const logs = await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberRoleUpdate, limit: 1 });
-      const entry = logs.entries.first();
+      const logs = await newMember.guild.fetchAuditLogs({
+        type: AuditLogEvent.MemberRoleUpdate,
+        limit: 5,
+      });
+
+      const now = Date.now();
+      const entry = logs.entries.find(
+        e =>
+          e.target?.id === newMember.id &&
+          now - e.createdTimestamp < 2000
+      );
+
       if (entry) user = `<@${entry.executor?.id}>`;
     } catch (err) {
       console.warn("Failed to fetch audit log for role change:", err);
