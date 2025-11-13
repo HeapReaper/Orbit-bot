@@ -85,7 +85,7 @@ export default class CommandsListener {
         { name: t(guildSettings?.language, "online_players"), value: `${mcData.online}/${mcData.max}`, inline: true },
         {
           name: t(guildSettings?.language, "player_list"),
-          value: mcData.list.length > 0 ? mcData.list.join(", ") : "Hidden",
+          value: mcData.list.length > 0 ? mcData.list.join(", ") : "...",
           inline: false
         }
       )

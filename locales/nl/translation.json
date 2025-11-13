@@ -70,5 +70,8 @@
   "old_name": "Oude naam",
   "new_name": "Nieuwe naam",
   "online_players": "Online spelers",
-  "player_list": "Spelers lijst"
+  "player_list": "Spelers lijst",
+  "player_update": "Spelers update",
+  "joined": "Bijgekomen",
+  "left": "Weggegaan"
 }
