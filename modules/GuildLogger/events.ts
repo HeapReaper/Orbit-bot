@@ -878,6 +878,9 @@ export default class Events {
   // Guild events
   async guildUpdated(oldGuild: any, newGuild: any) {
     const lang = await this.getGuildLanguage(newGuild.id);
+
+    if (oldGuild.name === newGuild.name) return;
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "guild_update"))
