@@ -3,14 +3,13 @@ import {
   Interaction,
   Events,
   MessageFlags,
-  PermissionsBitField,
   EmbedBuilder,
-  ColorResolvable,
-  ChatInputCommandInteraction,
 } from "discord.js";
 import { Logging } from "@utils/logging";
 import { prisma } from "@utils/prisma";
 import { status } from "minecraft-server-util";
+import getGuildSettings from "@utils/getGuildSettings";
+import { t } from "utils/i18n";
 
 let instance: CommandsListener | null = null;
 
@@ -49,7 +48,7 @@ export default class CommandsListener {
 
     if (!data) {
       await interaction.reply({
-        content: "Module hasn't been configured/enabled yet.",
+        content: "Module hasn't been configured yet.",
         flags: MessageFlags.Ephemeral
       });
       return
@@ -64,6 +63,7 @@ export default class CommandsListener {
     }
 
     const mcData = await this.getMinecraftPlayers(data.ip, data.port);
+    const guildSettings = await getGuildSettings(interaction.guild.id);
 
     if (!mcData) {
       await interaction.reply({
@@ -73,7 +73,19 @@ export default class CommandsListener {
       return
     }
 
-    await interaction.reply(`🟢 **Online:** ${mcData.online}/${mcData.max}\n👥 **Players:** ${mcData.list.join(", ") || "Hidden"}`);
+    const embed = new EmbedBuilder()
+      .setTitle("Minecraft Server Status")
+      .setColor(guildSettings?.primaryColor || "#2F3136")
+      .addFields(
+        { name: t(guildSettings?.language, "online_players"), value: `${mcData.online}/${mcData.max}`, inline: true },
+        {
+          name: t(guildSettings?.language, "player_list"),
+          value: mcData.list.length > 0 ? mcData.list.join(", ") : "Hidden",
+          inline: false
+        }
+      )
+      .setTimestamp()
+      .setFooter({ text: "Minecraft Server Info" });
   }
 
   async getMinecraftPlayers(host: string, port: number = 25565) {

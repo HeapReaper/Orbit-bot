@@ -68,5 +68,7 @@
   "old_role": "Oude rol",
   "new_role": "Nieuwe rol",
   "old_name": "Oude naam",
-  "new_name": "Nieuwe naam"
+  "new_name": "Nieuwe naam",
+  "online_players": "Online spelers",
+  "player_list": "Spelers lijst"
 }
