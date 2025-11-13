@@ -25,6 +25,8 @@ export default class Tasks {
   async task() {
     Logging.trace("Running change nickname task in bot/tasks");
 
+    if (process.env.NODE_ENV !== "production") return;
+
     const data = await this.prisma.botSettings.findMany();
 
     for (const setting of data) {
