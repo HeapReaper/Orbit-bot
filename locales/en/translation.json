@@ -70,5 +70,7 @@
   "old_name": "Old name",
   "new_name": "New name",
   "online_players": "Online players",
-  "player_list": "Player list"
+  "player_list": "Player list",
+  "player_update": "Player update",
+  "joined": "Joined"
 }
