@@ -19,6 +19,8 @@ model AntiBotSettings {
   jailRole            String?  @db.VarChar(22)
   createdAt           DateTime @default(now()) @db.DateTime(0)
   updatedAt           DateTime @db.DateTime(0)
+  blockInvites        Boolean  @default(false)
+  excludeAdmins       Boolean  @default(false)
 }
 
 model AutoMessage {
