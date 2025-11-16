@@ -73,5 +73,16 @@
   "player_list": "Spelers lijst",
   "player_update": "Spelers update",
   "joined": "Bijgekomen",
-  "left": "Weggegaan"
+  "left": "Weggegaan",
+  "anti_bot_notification": "Anti Bot melding",
+  "reason": "Reden",
+  "punishment": "Straf",
+  "mute": "Mute",
+  "kick": "Kick",
+  "ban": "Ban",
+  "jail": "Gevangenis",
+  "to_many_messages_in_different_channels": "Te veel berichten in meerdere kanalen in een korte tijd",
+  "triggered_by": "Getriggerd door",
+  "used_forbidden_word": "Gebruik van een verboden woord",
+  "non_admin_send_discord_invite": "Stuurde een invite link"
 }

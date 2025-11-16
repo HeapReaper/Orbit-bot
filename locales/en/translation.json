@@ -72,5 +72,16 @@
   "online_players": "Online players",
   "player_list": "Player list",
   "player_update": "Player update",
-  "joined": "Joined"
+  "joined": "Joined",
+  "anti_bot_notification": "Anti Bot notification",
+  "reason": "Reason",
+  "punishment": "Punishment",
+  "mute": "Mute",
+  "kick": "Kick",
+  "ban": "Ban",
+  "jail": "Jail",
+  "to_many_messages_in_different_channels": "To many messages in different channels in a short amount of time",
+  "triggered_by": "Triggered by",
+  "used_forbidden_word": "Used forbidden word",
+  "non_admin_send_discord_invite": "Sent a Discord invite link"
 }
