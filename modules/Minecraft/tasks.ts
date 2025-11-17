@@ -27,7 +27,7 @@ export default class Tasks {
   }
 
   async task() {
-    Logging.info("Running task Minecraft: Notify if players are online...");
+    Logging.trace("Running task Minecraft: Notify if players are online...");
 
     let data;
     const cachedData = await redis.get("minecraftSettings");
