@@ -22,6 +22,7 @@ import { prisma } from "@utils/prisma";
 import getGuildSettings from "@utils/getGuildSettings";
 import { t } from "@utils/i18n";
 import process from "node:process";
+import {Logging} from "@utils/logging.ts";
 
 const redis = getRedisClient();
 let instance: Events | null = null;
@@ -163,6 +164,16 @@ export default class Events {
 
   // Messages
   async messageDelete(message: Message | PartialMessage) {
+
+    if (message.partial) {
+      try {
+        message = await message.fetch();
+      } catch (err) {
+        Logging.error(`Failed to fetch partial message: ${err}`);
+        return;
+      }
+    }
+
     if (!message.guild) return;
 
     const lang = await this.getGuildLanguage(message.guild.id);
@@ -175,6 +186,7 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(message.guild.id, "WARN", `User ${message.author?.username} deleted a message: ${message.content}`)
     await this.logIfEnabled(message.guild.id, "message_delete", embed);
   }
 
@@ -189,6 +201,8 @@ export default class Events {
       .setTitle(t(lang, "messages_deleted"))
       .setDescription(`${t(lang, "count")}: **${messages.size}**`)
       .setTimestamp();
+
+    // TODO: Add bulk message delete log
     await this.logIfEnabled(guild.id, "message_bulk_delete", embed);
   }
 
@@ -209,6 +223,8 @@ export default class Events {
 
     if (oldMessage.content === newMessage.content) return;
 
+    if (!oldMessage.guild) return;
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "message_edit"))
@@ -219,7 +235,7 @@ export default class Events {
       )
       .setTimestamp();
 
-    // @ts-ignore
+    await this.addToGuildLog(oldMessage.guild.id, "INFO", `User ${oldMessage.author.username} updated a message from ${oldMessage.content} to ${newMessage.content}`);
     await this.logIfEnabled(oldMessage.guild.id, "message_edit", embed);
   }
 
@@ -236,6 +252,8 @@ export default class Events {
         { name: t(lang, "message"), value: `${reaction.message.url ?? t(lang, "none")}` }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(reaction.guild.id, "INFO", `User ${user.username} added a reaction: ${reaction.emoji} on message: ${reaction.message.url}`);
     await this.logIfEnabled(guildId, "message_reaction_add", embed);
   }
 
@@ -252,6 +270,8 @@ export default class Events {
         { name: t(lang, "message"), value: `${reaction.message.url ?? t(lang, "none")}` }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(reaction.guild.id, "WARN", `User ${user.username} removed a reaction: ${reaction.emoji} on message: ${reaction.message.url}`);
     await this.logIfEnabled(guildId, "message_reaction_remove", embed);
   }
 
@@ -264,11 +284,14 @@ export default class Events {
       const entry = logs.entries.first();
       if (entry) clearedBy = `<@${entry.executor?.id}>`;
     } catch {}
+
     const embed = new EmbedBuilder()
       .setColor(Colors.DarkGrey)
       .setTitle(t(lang, "reactions_cleared"))
       .addFields({ name: t(lang, "message"), value: `${message.url ?? t(lang, "none")}` }, { name: t(lang, "cleared_by"), value: clearedBy })
       .setTimestamp();
+
+    // TODO: Add who cleared reactions and log it to guildLog
     await this.logIfEnabled(message.guild.id, "message_reaction_clear", embed);
   }
 
@@ -294,6 +317,7 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(message.guild.id, "INFO", `User ${user} pinned a message: ${message.content?.substring(0, 1000) ?? t(lang, "none")}`);
     await this.logIfEnabled(message.guild.id, "message_pin", embed);
   }
 
@@ -319,12 +343,21 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(message.guild.id, "WARN", `User ${user} un-pinned a message: ${message.content?.substring(0, 1000) ?? t(lang, "none")}`);
     await this.logIfEnabled(message.guild.id, "message_unpin", embed);
   }
 
   // Member events
   async memberJoined(member: GuildMember) {
     const lang = await this.getGuildLanguage(member.guild.id);
+
+    if (member.partial) {
+      try {
+        member = await member.fetch();
+      } catch (err) {
+        Logging.error(`Failed to fetch partial member in GuildLogger Events`)
+      }
+    }
 
     const embed = new EmbedBuilder()
       .setColor(Colors.Green)
@@ -335,12 +368,22 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(member.guild.id, "INFO", `User ${member.displayName} joined the server`);
     await this.logIfEnabled(member.guild.id, "member_join", embed);
   }
 
   async memberLeft(member: GuildMember | PartialGuildMember) {
     if (!member.guild) return;
+
     const lang = await this.getGuildLanguage(member.guild.id);
+
+    if (member.partial) {
+      try {
+        member = await member.fetch();
+      } catch (err) {
+        Logging.error(`Failed to fetch partial member in GuildLogger Events`)
+      }
+    }
 
     const embed = new EmbedBuilder()
       .setColor(Colors.Red)
@@ -348,6 +391,7 @@ export default class Events {
       .addFields({ name: t(lang, "user"), value: `<@${member.id}>` })
       .setTimestamp();
 
+    await this.addToGuildLog(member.guild.id, "WARN", `User ${member.displayName} left the server`);
     await this.logIfEnabled(member.guild.id, "member_leave", embed);
   }
 
@@ -375,17 +419,28 @@ export default class Events {
         { name: t(lang, "new_name"), value: `${newMember.displayName ?? "Unknown"}` },
       )
       .setTimestamp();
+
+    await this.addToGuildLog(oldMember.guild.id, "INFO", `User ${oldMember.displayName} updated there username from ${oldMember.displayName} to ${newMember.displayName}`);
     await this.logIfEnabled(newMember.guild.id, "member_update", embed);
   }
 
   async memberBanned(ban: GuildBan) {
     const lang = await this.getGuildLanguage(ban.guild.id);
-    let user = t(lang, "unknown");
+
+    let executorMention = t(lang, "unknown");
+    let executorName: string | null = null;
 
     try {
-      const logs = await ban.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd, limit: 1 });
+      const logs = await ban.guild.fetchAuditLogs({
+        type: AuditLogEvent.MemberBanAdd,
+        limit: 1,
+      });
+
       const entry = logs.entries.first();
-      if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) {
+        executorMention = `<@${entry.executor?.id}>`;   // Mention in embed
+        executorName = entry.executor?.username ?? null; // Plain username for logging
+      }
     } catch (err) {
       console.warn("Failed to fetch audit log for member ban:", err);
     }
@@ -395,21 +450,36 @@ export default class Events {
       .setTitle(t(lang, "member_ban"))
       .addFields(
         { name: t(lang, "user"), value: `${ban.user.tag}` },
-        { name: t(lang, "done_by"), value: user }
+        { name: t(lang, "done_by"), value: executorMention }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(
+      ban.guild.id,
+      "INFO",
+      `User ${ban.user?.username ?? "Unknown"} has been banned${executorName ? ` by ${executorName}` : ""}${ban.reason ? ` (reason: ${ban.reason})` : ""}`
+    );
 
     await this.logIfEnabled(ban.guild.id, "member_ban", embed);
   }
 
   async memberUnbanned(ban: GuildBan) {
     const lang = await this.getGuildLanguage(ban.guild.id);
-    let user = t(lang, "unknown");
+
+    let executorMention = t(lang, "unknown");
+    let executorName: string | null = null;
 
     try {
-      const logs = await ban.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanRemove, limit: 1 });
+      const logs = await ban.guild.fetchAuditLogs({
+        type: AuditLogEvent.MemberBanRemove,
+        limit: 1,
+      });
+
       const entry = logs.entries.first();
-      if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) {
+        executorMention = `<@${entry.executor?.id}>`;
+        executorName = entry.executor?.username ?? null;
+      }
     } catch (err) {
       console.warn("Failed to fetch audit log for member unban:", err);
     }
@@ -419,22 +489,44 @@ export default class Events {
       .setTitle(t(lang, "member_unban"))
       .addFields(
         { name: t(lang, "user"), value: `${ban.user.tag}` },
-        { name: t(lang, "done_by"), value: user }
+        { name: t(lang, "done_by"), value: executorMention }
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      ban.guild.id,
+      "INFO",
+      `User ${ban.user?.username ?? "Unknown"} has been unbanned${executorName ? ` by ${executorName}` : ""}`
+    );
+
     await this.logIfEnabled(ban.guild.id, "member_unban", embed);
+
+    return { executorMention, executorName };
   }
 
   async memberTimeout(oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) {
-    if (!newMember.communicationDisabledUntil) return;
+    if (!newMember.communicationDisabledUntil) return null;
+
     const lang = await this.getGuildLanguage(newMember.guild.id);
-    let user = t(lang, "unknown");
+
+    let executorMention = t(lang, "unknown");
+    let executorName: string | null = null;
 
     try {
-      const logs = await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate, limit: 1 });
+      const logs = await newMember.guild.fetchAuditLogs({
+        type: AuditLogEvent.MemberUpdate,
+        limit: 1,
+      });
+
       const entry = logs.entries.first();
-      if (entry?.changes.some(c => c.key === "communication_disabled_until")) user = `<@${entry.executor?.id}>`;
+      const changed = entry?.changes?.some(
+        c => c.key === "communication_disabled_until"
+      );
+
+      if (entry && changed) {
+        executorMention = `<@${entry.executor?.id}>`;
+        executorName = entry.executor?.username ?? null;
+      }
     } catch (err) {
       console.warn("Failed to fetch audit log for timeout:", err);
     }
@@ -444,12 +536,23 @@ export default class Events {
       .setTitle(t(lang, "member_timeout"))
       .addFields(
         { name: t(lang, "user"), value: `<@${newMember.id}>` },
-        { name: t(lang, "until"), value: `<t:${Math.floor(newMember.communicationDisabledUntilTimestamp / 1000)}:R>` },
-        { name: t(lang, "done_by"), value: user }
+        {
+          name: t(lang, "until"),
+          value: `<t:${Math.floor(newMember.communicationDisabledUntilTimestamp ?? 0 / 1000)}:R>`
+        },
+        { name: t(lang, "done_by"), value: executorMention }
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      newMember.guild.id,
+      "INFO",
+      `User ${newMember.user?.username ?? "Unknown"} has been timed out${executorName ? ` by ${executorName}` : ""}`
+    );
+
     await this.logIfEnabled(newMember.guild.id, "member_timeout", embed);
+
+    return { executorMention, executorName };
   }
 
   async memberRoleChange(oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) {
@@ -1007,5 +1110,21 @@ export default class Events {
       .setTimestamp();
 
     await this.logIfEnabled(rule.guild.id, "auto_moderation_trigger", embed);
+  }
+
+  async addToGuildLog(guildId: string, type: "INFO" | "ERROR" | "WARN", message: string): Promise<void> {
+    if (!guildId) return;
+
+    if (!type) return;
+
+    if (!message) return;
+
+    await prisma.guildLog.create({
+      data: {
+        guildId,
+        type,
+        message,
+      }
+    });
   }
 }
