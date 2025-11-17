@@ -1,7 +1,7 @@
 import {
   Client, EmbedBuilder,
-  Events as DiscordEvents, GuildMember,
-  Message, PartialGuildMember,
+  Events as DiscordEvents,
+  Message,
   TextChannel,
 } from "discord.js";
 import { prisma } from "@utils/prisma";
@@ -31,6 +31,7 @@ export default class Events {
 
     const guildId = message.guild.id;
 
+    // Load settings (cached with Redis)
     let settingsRaw: string | null = await redis.get(`antibot:${guildId}`);
     let settings: any;
 
@@ -48,29 +49,30 @@ export default class Events {
 
     if (!settings.enabled) return;
 
+    // Block Discord invites link if enabled
     const discordInviteRegex = /(https?:\/\/)?(www\.)?(discord\.gg|discord\.com\/invite)\/[A-Za-z0-9]+/i;
 
-    // If message contains invite link and blocking it is enabled
     if (discordInviteRegex.test(message.content) && settings.blockInvites) {
       if (!message.member?.permissions.has("ManageGuild")) {
         await message.delete();
-
-        await this.sendNotification(message, "non_admin_send_discord_invite", settings)
+        await this.sendNotification(message, "non_admin_send_discord_invite", settings);
       }
     }
 
-    const key = `antibot_count:${guildId}:${message.author.id}`;
-    let countRaw = await redis.get(key);
-    let count = countRaw ? parseInt(countRaw) : 0;
-    count++;
+    // Track unique channel messages
+    const channelKey = `antibot_channels:${guildId}:${message.author.id}`;
 
-    await redis.set(key, count.toString(), "EX", settings.timeWindow);
+    // Add the channel to a Redis SET (unique only)
+    await redis.sadd(channelKey, message.channel.id);
+    await redis.expire(channelKey, settings.timeWindow);
 
-    if (count >= settings.channelLimit) {
+    const uniqueChannels = await redis.scard(channelKey);
+
+    if (uniqueChannels >= settings.channelLimit) {
+      if (settings.excludeAdmins && message.member?.permissions.has("ManageGuild")) return;
+
       let jailError = false;
       let muteError = false;
-
-      if (settings.excludeAdmins && message.member?.permissions.has("ManageGuild")) return;
 
       switch (settings.punishment) {
         case "mute":
@@ -83,71 +85,69 @@ export default class Events {
             }
           }
           break;
+
         case "kick":
           if (message.member?.kickable) {
             await message.member.kick("Anti-bot triggered");
           }
           break;
+
         case "ban":
           if (message.member?.bannable) {
             await message.member.ban({ reason: "Anti-bot triggered" });
           }
           break;
+
         case "jail":
           if (settings.jailRole && message.member) {
             const role = message.guild.roles.cache.get(settings.jailRole);
-            if (!role) break;
-
-            try {
-              await message.member.roles.add(role, "Anti-bot triggered");
-            } catch (err: any) {
-              console.error(`Failed to add jail role: ${err}`);
-
-              if (err.code === 50013) {
-                jailError = true;
+            if (role) {
+              try {
+                await message.member.roles.add(role, "Anti-bot triggered");
+              } catch (err: any) {
+                console.error(`Failed to add jail role: ${err}`);
+                if (err.code === 50013) jailError = true;
               }
             }
           }
           break;
+
         case "none":
         default:
           break;
       }
 
-      await this.sendNotification(message, "to_many_messages_in_different_channels" , settings);
+      await this.sendNotification(message, "to_many_messages_in_different_channels", settings);
 
-      await redis.del(key);
+      // Reset the channel set
+      await redis.del(channelKey);
     }
 
+    // Forbidden words
     if (Array.isArray(settings.forbiddenWords) && settings.forbiddenWords.length > 0) {
       const forbiddenWords: string[] = settings.forbiddenWords;
       const foundWord = forbiddenWords.find(word =>
         message.content.toLowerCase().includes(word.toLowerCase())
       );
 
-      if (!foundWord) return;
-
-      await message.delete();
-
-      await this.sendNotification(message, "used_forbidden_word" , settings);
+      if (foundWord) {
+        await message.delete();
+        await this.sendNotification(message, "used_forbidden_word", settings);
+      }
     }
   }
 
   async sendNotification(message: Message, reason: string, settings: any) {
     if (!message || !message.guild) return;
 
-    const guildSettings = await getGuildSettings(message.guild.id)
+    const guildSettings = await getGuildSettings(message.guild.id);
 
-    if (!settings) return;
-
-    if (!settings.notificationChannel) return;
+    if (!settings?.notificationChannel) return;
 
     const channel = message.guild.channels.cache.get(settings.notificationChannel) as TextChannel;
-
     if (!channel || !channel.isTextBased()) return;
 
     let member = message.member;
-
     if (!member) return;
 
     if (member.partial) {
@@ -164,8 +164,8 @@ export default class Events {
       .setColor(guildSettings?.primaryColor || "#2F3136")
       .setDescription(`${t(guildSettings.language ?? "en", "triggered_by")}: <@${member.id}>`)
       .addFields(
-        { name: t(guildSettings.language ?? "EN", "reason"), value: t(guildSettings.language ?? "en", reason)},
-        { name: t(guildSettings.language ?? "EN", "punishment"), value: t(guildSettings.language ?? "en", settings.punishment)}
+        { name: t(guildSettings.language ?? "EN", "reason"), value: t(guildSettings.language ?? "en", reason) },
+        { name: t(guildSettings.language ?? "EN", "punishment"), value: t(guildSettings.language ?? "en", settings.punishment) }
       );
 
     await channel.send({ embeds: [embed] });

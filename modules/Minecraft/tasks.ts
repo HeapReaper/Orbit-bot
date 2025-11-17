@@ -99,7 +99,7 @@ export default class Tasks {
           }
         }
       } catch (err) {
-        Logging.error(`Failed to check server ${server.ip}:${server.port}: ${err}`);
+        //
       }
     }
   }

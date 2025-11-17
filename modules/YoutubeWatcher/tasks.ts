@@ -62,8 +62,6 @@ export default class Tasks {
 
         if (!guildSettings || !guildSettings.length) continue;
 
-        console.log(latest);
-
         const embed = new EmbedBuilder()
           .setTitle(latest.title ?? "Oops, something went wrong")
           .setDescription(latest.description?.slice(0, 4000) || "No description available.")
@@ -112,7 +110,6 @@ export default class Tasks {
     const video = feed.feed.entry?.[0];
     if (!video) return null;
 
-    console.log(video)
     const videoId = video["yt:videoId"];
 
     const link = Array.isArray(video.link)
@@ -139,8 +136,8 @@ export default class Tasks {
       if (!match) return null;
 
       return match[1].replace(/\\n/g, "\n");
-    } catch (e) {
-      console.error("Description fetch error:", e);
+    } catch (err) {
+      Logging.error(`Description fetch error: ${err}`);
       return null;
     }
   }
