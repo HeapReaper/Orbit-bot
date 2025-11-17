@@ -133,7 +133,9 @@ export default class Events {
     }
   }
 
-  async sendNotification(message: Message, reason: string, settings) {
+  async sendNotification(message: Message, reason: string, settings: any) {
+    if (!message || !message.guild) return;
+
     const guildSettings = await getGuildSettings(message.guild.id)
 
     if (!settings) return;
@@ -145,6 +147,9 @@ export default class Events {
     if (!channel || !channel.isTextBased()) return;
 
     let member = message.member;
+
+    if (!member) return;
+
     if (member.partial) {
       try {
         member = await member.fetch();
