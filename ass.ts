@@ -14,7 +14,7 @@ async function main() {
       break;
 
     case 'refresh:slash':
-      await refreshSlashCommands();
+      await refreshSlashCommands(true);
       break;
 
     case 'new:module':
