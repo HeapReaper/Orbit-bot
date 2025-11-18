@@ -36,8 +36,22 @@ export default class Tasks {
       if (guild.trialEndsAt && guild.trialEndsAt < now) {
         Logging.info(`Disabled premium because trail ended for guild ID ${guild.guildId}`);
         await prisma.premiumGuild.update({
-          where: { guildId: guild.guildId},
-          data: { premium: false },
+          where: {
+            guildId: guild.guildId,
+          },
+          data: {
+            premium: false,
+            trialEndsAt: null
+          },
+        })
+
+        await prisma.botSettings.update({
+          where: {
+            guildId: guild.guildId,
+          },
+          data: {
+            nickname: "Orbit",
+          }
         })
       }
     }
