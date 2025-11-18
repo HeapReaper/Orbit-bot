@@ -84,5 +84,9 @@
   "triggered_by": "Triggered by",
   "used_forbidden_word": "Used forbidden word",
   "non_admin_send_discord_invite": "Sent a Discord invite link",
-  "our_state_for_bot_and_dashboard": "Online state for the bot and dashboard"
+  "our_state_for_bot_and_dashboard": "Online state for the bot and dashboard",
+  "trail_will_end_soon": "Trail will end soon",
+  "trail_end_description": "Within 7 days the trail will end",
+  "contact": "Contact",
+  "email": "Email"
 }
