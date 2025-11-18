@@ -29,6 +29,11 @@ async function main() {
 
   client.on(DiscordEvents.ClientReady, async (client) => {
     client.setMaxListeners(20);
+
+    // Error monitoring
+    const Sentry = require("@sentry/node");
+    Sentry.init({ dsn: process.env.SENTRY_DSN });
+
     if (process.env.ENVIRONMENT !== "debug") {
       await refreshSlashCommands(true);
     }
