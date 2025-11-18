@@ -17,7 +17,8 @@ export async function refreshSlashCommands(global = false): Promise<void> {
     const modulePath: string = path.join(modulesPath, module, "commands.ts");
 
     try {
-      const commandsFromModule: any = await import(path.resolve(modulePath));
+      // Ensure fresh import to avoid cached commands
+      const commandsFromModule: any = await import(`${path.resolve(modulePath)}?update=${Date.now()}`);
       if (!commandsFromModule.commands) continue;
       allCommands.push(...commandsFromModule.commands);
       Logging.info(`Successfully prepared commands for module: ${module}`);
@@ -26,34 +27,36 @@ export async function refreshSlashCommands(global = false): Promise<void> {
     }
   }
 
-  if (global) {
-    // Sync globally
-    try {
-      await rest.put(
-        Routes.applicationCommands(getEnv("CLIENT_ID")!),
-        { body: allCommands }
-      );
-      Logging.info(`Successfully synced global commands`);
-    } catch (error) {
-      Logging.error(`Failed to sync global commands: ${error}`);
+  try {
+    // First, clear all global commands
+    await rest.put(Routes.applicationCommands(getEnv("CLIENT_ID")!), { body: [] });
+    Logging.info("Cleared all global commands");
+
+    // Then, clear all guild commands
+    const guilds = await rest.get(Routes.userGuilds()) as { id: string }[];
+    for (const guild of guilds) {
+      await rest.put(Routes.applicationGuildCommands(getEnv("CLIENT_ID")!, guild.id), { body: [] });
+      Logging.info(`Cleared all commands for guild: ${guild.id}`);
     }
-  } else {
-    // Refresh for all guilds the bot is in
-    try {
+
+    // Now, set the new commands globally
+    if (global) {
+      // Sync globally
+      await rest.put(Routes.applicationCommands(getEnv("CLIENT_ID")!), { body: allCommands });
+      Logging.info("Successfully synced global commands");
+    } else {
+      // Sync to each guild
       const guilds = await rest.get(Routes.userGuilds()) as { id: string }[];
-      for (const guild of guilds) {
-        try {
-          await rest.put(
-            Routes.applicationGuildCommands(getEnv("CLIENT_ID")!, guild.id),
-            { body: allCommands }
-          );
-          Logging.info(`Successfully synced commands for guild: ${guild.id}`);
-        } catch (error) {
-          Logging.error(`Failed to sync commands for guild ${guild.id}: ${error}`);
-        }
-      }
-    } catch (error) {
-      Logging.error(`Failed to fetch guilds: ${error}`);
+      await Promise.all(guilds.map(async (guild) => {
+        await rest.put(
+          Routes.applicationGuildCommands(getEnv("CLIENT_ID")!, guild.id),
+          { body: allCommands }
+        );
+        Logging.info(`Successfully synced new commands for guild: ${guild.id}`);
+      }));
     }
+
+  } catch (error) {
+    Logging.error(`Failed during command refresh: ${error}`);
   }
 }
