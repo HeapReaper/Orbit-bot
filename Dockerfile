@@ -11,6 +11,8 @@ WORKDIR /app
 
 COPY package.json ./
 
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+
 RUN bun install
 
 COPY . .
