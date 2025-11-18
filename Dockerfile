@@ -9,15 +9,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY package.json ./
-
-ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+COPY . .
 
 RUN bun install
 
-COPY . .
-
-RUN bun prisma generate
+RUN bunx prisma generate
 
 WORKDIR /app/src
 
