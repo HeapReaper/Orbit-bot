@@ -83,5 +83,6 @@
   "to_many_messages_in_different_channels": "To many messages in different channels in a short amount of time",
   "triggered_by": "Triggered by",
   "used_forbidden_word": "Used forbidden word",
-  "non_admin_send_discord_invite": "Sent a Discord invite link"
+  "non_admin_send_discord_invite": "Sent a Discord invite link",
+  "our_state_for_bot_and_dashboard": "Online state for the bot and dashboard"
 }

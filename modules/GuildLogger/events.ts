@@ -242,6 +242,7 @@ export default class Events {
   async reactionAdd(reaction: any, user: any) {
     const guildId = reaction.message.guildId;
     if (!guildId) return;
+
     const lang = await this.getGuildLanguage(guildId);
     const embed = new EmbedBuilder()
       .setColor(Colors.Green)
@@ -253,13 +254,14 @@ export default class Events {
       )
       .setTimestamp();
 
-    await this.addToGuildLog(reaction.guild.id, "INFO", `User ${user.username} added a reaction: ${reaction.emoji} on message: ${reaction.message.url}`);
+    await this.addToGuildLog(guildId, "INFO", `User ${user.username} added a reaction: ${reaction.emoji} on message: ${reaction.message.url}`);
     await this.logIfEnabled(guildId, "message_reaction_add", embed);
   }
 
   async reactionRemove(reaction: any, user: any) {
     const guildId = reaction.message.guildId;
     if (!guildId) return;
+
     const lang = await this.getGuildLanguage(guildId);
     const embed = new EmbedBuilder()
       .setColor(Colors.Orange)
@@ -271,13 +273,15 @@ export default class Events {
       )
       .setTimestamp();
 
-    await this.addToGuildLog(reaction.guild.id, "WARN", `User ${user.username} removed a reaction: ${reaction.emoji} on message: ${reaction.message.url}`);
+    await this.addToGuildLog(guildId, "WARN", `User ${user.username} removed a reaction: ${reaction.emoji} on message: ${reaction.message.url}`);
     await this.logIfEnabled(guildId, "message_reaction_remove", embed);
   }
 
   async reactionsCleared(message: Message | PartialMessage) {
     if (!message.guild) return;
+
     const lang = await this.getGuildLanguage(message.guild.id);
+
     let clearedBy = t(lang, "unknown");
     try {
       const logs = await message.guild.fetchAuditLogs({ type: "MESSAGE_REACTION_REMOVE_ALL", limit: 1 });
@@ -456,7 +460,7 @@ export default class Events {
 
     await this.addToGuildLog(
       ban.guild.id,
-      "INFO",
+      "WARN",
       `User ${ban.user?.username ?? "Unknown"} has been banned${executorName ? ` by ${executorName}` : ""}${ban.reason ? ` (reason: ${ban.reason})` : ""}`
     );
 
@@ -495,7 +499,7 @@ export default class Events {
 
     await this.addToGuildLog(
       ban.guild.id,
-      "INFO",
+      "WARN",
       `User ${ban.user?.username ?? "Unknown"} has been unbanned${executorName ? ` by ${executorName}` : ""}`
     );
 
@@ -546,7 +550,7 @@ export default class Events {
 
     await this.addToGuildLog(
       newMember.guild.id,
-      "INFO",
+      "WARN",
       `User ${newMember.user?.username ?? "Unknown"} has been timed out${executorName ? ` by ${executorName}` : ""}`
     );
 
@@ -589,6 +593,13 @@ export default class Events {
           { name: t(lang, "done_by"), value: user }
         )
         .setTimestamp();
+
+      await this.addToGuildLog(
+        newMember.guild.id,
+        "INFO",
+        `User ${newMember.user?.username ?? "Unknown"} has gotten new role(s): ${addedRoles.map(r => r.name).join(", ")}`
+      );
+
       await this.logIfEnabled(newMember.guild.id, "member_role_add", embed);
     }
 
@@ -602,6 +613,13 @@ export default class Events {
           { name: t(lang, "done_by"), value: user }
         )
         .setTimestamp();
+
+      await this.addToGuildLog(
+        newMember.guild.id,
+        "WARN",
+        `User ${newMember.user?.username ?? "Unknown"} has gotten fewer role(s): ${removedRoles.map(r => r.name).join(", ")}`
+      );
+
       await this.logIfEnabled(newMember.guild.id, "member_role_remove", embed);
     }
   }
@@ -623,8 +641,16 @@ export default class Events {
           { name: t(lang, "channel"), value: newState.channel.name }
         )
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} has joined voice channel ${newState.channel.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_join", embed);
     }
+
     // User left voice
     else if (oldState.channel && !newState.channel) {
       const embed = new EmbedBuilder()
@@ -635,8 +661,16 @@ export default class Events {
           { name: t(lang, "channel"), value: oldState.channel.name }
         )
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} has leaved voice channel ${oldState.channel.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_leave", embed);
     }
+
     // User switched channels
     else if (oldState.channelId !== newState.channelId) {
       const embed = new EmbedBuilder()
@@ -648,6 +682,13 @@ export default class Events {
           { name: t(lang, "to"), value: newState.channel?.name ?? t(lang, "none") }
         )
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} has switches voice channel from ${oldState.channel?.name} to ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_switch", embed);
     }
 
@@ -658,6 +699,13 @@ export default class Events {
         .setTitle(t(lang, "voice_mute"))
         .addFields({ name: t(lang, "user"), value: memberTag })
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} is muted in voice channel ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_mute", embed);
     } else if (oldState.selfMute && !newState.selfMute) {
       const embed = new EmbedBuilder()
@@ -665,6 +713,13 @@ export default class Events {
         .setTitle(t(lang, "voice_unmute"))
         .addFields({ name: t(lang, "user"), value: memberTag })
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} is unmuted in voice channel ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_unmute", embed);
     }
 
@@ -675,6 +730,13 @@ export default class Events {
         .setTitle(t(lang, "voice_deafen"))
         .addFields({ name: t(lang, "user"), value: memberTag })
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} is deafened in voice channel ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_deafen", embed);
     } else if (oldState.selfDeaf && !newState.selfDeaf) {
       const embed = new EmbedBuilder()
@@ -682,6 +744,13 @@ export default class Events {
         .setTitle(t(lang, "voice_undeafen"))
         .addFields({ name: t(lang, "user"), value: memberTag })
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} is undeafened in voice channel ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_undeafen", embed);
     }
 
@@ -692,6 +761,13 @@ export default class Events {
         .setTitle(t(lang, "voice_stream_start"))
         .addFields({ name: t(lang, "user"), value: memberTag })
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} has started streaming in voice channel ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_stream_start", embed);
     } else if (oldState.streaming && !newState.streaming) {
       const embed = new EmbedBuilder()
@@ -699,6 +775,13 @@ export default class Events {
         .setTitle(t(lang, "voice_stream_stop"))
         .addFields({ name: t(lang, "user"), value: memberTag })
         .setTimestamp();
+
+      await this.addToGuildLog(
+        oldState.guild.id,
+        "INFO",
+        `User ${oldState.member?.displayName ?? "Unknown"} has stopped streaming in voice channel ${newState.channel?.name}`
+      );
+
       await this.logIfEnabled(oldState.guild.id, "voice_stream_stop", embed);
     }
   }
@@ -707,11 +790,13 @@ export default class Events {
   async roleCreated(role: Role) {
     const lang = await this.getGuildLanguage(role.guild.id);
     let user = t(lang, "unknown");
+    let executor;
 
     try {
       const logs = await role.guild.fetchAuditLogs({ type: AuditLogEvent.RoleCreate, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
     } catch (err) {
       console.warn("Failed to fetch audit log for role creation:", err);
     }
@@ -725,17 +810,24 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      role.guild.id,
+      "INFO",
+      `User ${executor ?? "Unknown"} has created a role: ${role.name}`
+    );
+
     await this.logIfEnabled(role.guild.id, "role_create", embed);
   }
 
   async roleDeleted(role: Role) {
     const lang = await this.getGuildLanguage(role.guild.id);
     let user = t(lang, "unknown");
-
+    let executor;
     try {
       const logs = await role.guild.fetchAuditLogs({ type: AuditLogEvent.RoleDelete, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
     } catch (err) {
       console.warn("Failed to fetch audit log for role deletion:", err);
     }
@@ -749,17 +841,25 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      role.guild.id,
+      "WARN",
+      `User ${executor ?? "Unknown"} has deleted a role: ${role.name}`
+    );
+
     await this.logIfEnabled(role.guild.id, "role_delete", embed);
   }
 
   async roleUpdated(oldRole: Role, newRole: Role) {
     const lang = await this.getGuildLanguage(newRole.guild.id);
     let user = t(lang, "unknown");
+    let executor;
 
     try {
       const logs = await newRole.guild.fetchAuditLogs({ type: AuditLogEvent.RoleUpdate, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
     } catch (err) {
       console.warn("Failed to fetch audit log for role update:", err);
     }
@@ -776,6 +876,12 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      oldRole.guild.id,
+      "INFO",
+      `User ${executor ?? "Unknown"} has updated a role from ${oldRole.name} to ${newRole.name}`
+    );
+
     await this.logIfEnabled(newRole.guild.id, "role_update", embed);
   }
 
@@ -783,11 +889,12 @@ export default class Events {
   async channelCreated(channel: GuildChannel) {
     const lang = await this.getGuildLanguage(channel.guild.id);
     let user = t(lang, "unknown");
-
+    let executor;
     try {
       const logs = await channel.guild.fetchAuditLogs({ type: AuditLogEvent.ChannelCreate, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
     } catch (err) {
       console.warn("Failed to fetch audit log for channel creation:", err);
     }
@@ -801,17 +908,24 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      channel.guild.id,
+      "INFO",
+      `User ${executor ?? "Unknown"} has created a channel: ${channel.name}`
+    );
+
     await this.logIfEnabled(channel.guild.id, "channel_create", embed);
   }
 
   async channelDeleted(channel: GuildChannel) {
     const lang = await this.getGuildLanguage(channel.guild.id);
     let user = t(lang, "unknown");
-
+    let executor;
     try {
       const logs = await channel.guild.fetchAuditLogs({ type: AuditLogEvent.ChannelDelete, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
     } catch (err) {
       console.warn("Failed to fetch audit log for channel deletion:", err);
     }
@@ -825,16 +939,24 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      channel.guild.id,
+      "WARN",
+      `User ${executor ?? "Unknown"} has created a channel: ${channel.name}`
+    );
+
     await this.logIfEnabled(channel.guild.id, "channel_delete", embed);
   }
 
   async channelUpdated(oldChannel: GuildChannel, newChannel: GuildChannel) {
     const lang = await this.getGuildLanguage(newChannel.guild.id);
     let user = t(lang, "unknown");
+    let executor;
 
     try {
       const logs = await newChannel.guild.fetchAuditLogs({ type: AuditLogEvent.ChannelUpdate, limit: 1 });
       const entry = logs.entries.first();
+      if (entry) executor = entry.executor?.username;
       if (entry) user = `<@${entry.executor?.id}>`;
     } catch (err) {
       console.warn("Failed to fetch audit log for channel update:", err);
@@ -852,16 +974,24 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      oldChannel.guild.id,
+      "INFO",
+      `User ${executor ?? "Unknown"} has updated a channel from ${oldChannel.name} to ${newChannel.name}`
+    );
+
     await this.logIfEnabled(newChannel.guild.id, "channel_update", embed);
   }
 
   async channelPinsUpdated(channel: GuildChannel, time: number) {
     const lang = await this.getGuildLanguage(channel.guild.id);
     let user = t(lang, "unknown");
+    let executor;
 
     try {
       const logs = await channel.guild.fetchAuditLogs({ type: AuditLogEvent.MessagePin, limit: 1 });
       const entry = logs.entries.first();
+      if (entry) executor = entry.executor?.username;
       if (entry) user = `<@${entry.executor?.id}>`;
     } catch (err) {
       console.warn("Failed to fetch audit log for pin:", err);
@@ -877,18 +1007,26 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      channel.guild.id,
+      "INFO",
+      `User ${executor ?? "Unknown"} has updated channel pins in ${channel.name}`
+    );
+
     await this.logIfEnabled(channel.guild.id, "channel_pins_update", embed);
   }
   
   // Thread events
   async threadCreated(thread: ThreadChannel) {
     const lang = await this.getGuildLanguage(thread.guild.id);
-
     let user = t(lang, "unknown");
+    let executor;
+
     try {
       const logs = await thread.guild.fetchAuditLogs({ type: AuditLogEvent.ThreadCreate, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
     } catch (err) {
       console.warn("Failed to fetch audit log for thread creation:", err);
     }
@@ -902,6 +1040,12 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      thread.guild.id,
+      "INFO",
+      `User ${executor} has created a thread: ${thread.name}`
+    );
+
     await this.logIfEnabled(thread.guild.id, "thread_create", embed);
   }
 
@@ -909,10 +1053,14 @@ export default class Events {
     const lang = await this.getGuildLanguage(thread.guild.id);
 
     let user = t(lang, "unknown");
+    let executor;
+
     try {
       const logs = await thread.guild.fetchAuditLogs({ type: AuditLogEvent.ThreadDelete, limit: 1 });
       const entry = logs.entries.first();
       if (entry) user = `<@${entry.executor?.id}>`;
+      if (entry) executor = entry.executor?.username;
+
     } catch (err) {
       console.warn("Failed to fetch audit log for thread deletion:", err);
     }
@@ -926,6 +1074,12 @@ export default class Events {
       )
       .setTimestamp();
 
+    await this.addToGuildLog(
+      thread.guild.id,
+      "WARN",
+      `User ${executor} has deleted a thread: ${thread.name}`
+    );
+
     await this.logIfEnabled(thread.guild.id, "thread_delete", embed);
   }
 
@@ -933,9 +1087,13 @@ export default class Events {
     const lang = await this.getGuildLanguage(newThread.guild.id);
 
     let user = t(lang, "unknown");
+    let executor;
+
     try {
       const logs = await newThread.guild.fetchAuditLogs({ type: AuditLogEvent.ThreadUpdate, limit: 1 });
       const entry = logs.entries.first();
+      if (entry) executor = entry.executor?.username;
+
       if (entry) user = `<@${entry.executor?.id}>`;
     } catch (err) {
       console.warn("Failed to fetch audit log for thread update:", err);
@@ -952,6 +1110,12 @@ export default class Events {
         { name: t(lang, "done_by"), value: user }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(
+      oldThread.guild.id,
+      "INFO",
+      `User ${executor} has updated a thread from ${oldThread.name} to ${newThread.name}`
+    );
 
     await this.logIfEnabled(newThread.guild.id, "thread_update", embed);
   }
@@ -992,83 +1156,176 @@ export default class Events {
   async guildUpdated(oldGuild: any, newGuild: any) {
     const lang = await this.getGuildLanguage(newGuild.id);
 
+    // Ignore if the name did not change
     if (oldGuild.name === newGuild.name) return;
+
+    let user = t(lang, "unknown");
+    let executor: string | undefined;
+
+    try {
+      const logs = await newGuild.fetchAuditLogs({
+        type: AuditLogEvent.GuildUpdate,
+        limit: 1
+      });
+
+      const entry = logs.entries.first();
+
+      if (entry) {
+        executor = entry.executor?.username;
+        user = `<@${entry.executor?.id}>`;
+      }
+    } catch (err) {
+      console.warn("Failed to fetch audit log for guild update:", err);
+    }
 
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "guild_update"))
       .addFields(
         { name: t(lang, "old_name"), value: oldGuild.name || t(lang, "none") },
-        { name: t(lang, "new_name"), value: newGuild.name || t(lang, "none") }
+        { name: t(lang, "new_name"), value: newGuild.name || t(lang, "none") },
+        { name: t(lang, "done_by"), value: user }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(
+      newGuild.id,
+      "WARN",
+      `User ${executor ?? "Unknown"} updated guild name from ${oldGuild.name} to ${newGuild.name}`
+    );
+
     await this.logIfEnabled(newGuild.id, "guild_update", embed);
   }
 
   async guildIntegrationsUpdated(guild: any) {
     const lang = await this.getGuildLanguage(guild.id);
+
+    const { userTag, mention } = await this.getExecutor(guild, AuditLogEvent.IntegrationUpdate);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "guild_integrations_update"))
-      .setDescription(t(lang, "guild_integrations_changed"))
+      .setDescription(`${t(lang, "guild_integrations_changed")} — ${t(lang, "done_by")}: ${mention}`)
       .setTimestamp();
+
+    await this.addToGuildLog(
+      guild.id,
+      "INFO",
+      `User ${userTag} updated guild integrations`
+    );
+
     await this.logIfEnabled(guild.id, "guild_integrations_update", embed);
   }
 
   async guildEmojisUpdated(guild: any) {
     const lang = await this.getGuildLanguage(guild.id);
+
+    const { userTag, mention } = await this.getExecutor(guild, AuditLogEvent.EmojiUpdate);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "guild_emojis_update"))
-      .setDescription(t(lang, "guild_emojis_changed"))
+      .setDescription(`${t(lang, "guild_emojis_changed")} — ${t(lang, "done_by")}: ${mention}`)
       .setTimestamp();
+
+    await this.addToGuildLog(
+      guild.id,
+      "INFO",
+      `User ${userTag} updated emojis in the guild`
+    );
+
     await this.logIfEnabled(guild.id, "guild_emojis_update", embed);
   }
 
   async guildStickersUpdated(guild: any) {
     const lang = await this.getGuildLanguage(guild.id);
+
+    const { userTag, mention } = await this.getExecutor(guild, AuditLogEvent.StickerUpdate);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "guild_stickers_update"))
-      .setDescription(t(lang, "guild_stickers_changed"))
+      .setDescription(`${t(lang, "guild_stickers_changed")} — ${t(lang, "done_by")}: ${mention}`)
       .setTimestamp();
+
+    await this.addToGuildLog(
+      guild.id,
+      "INFO",
+      `User ${userTag} updated stickers in the guild`
+    );
+
     await this.logIfEnabled(guild.id, "guild_stickers_update", embed);
   }
 
   // Scheduled events
   async guildScheduledEventCreated(event: GuildScheduledEvent) {
     const lang = await this.getGuildLanguage(event.guildId);
+
+    const { userTag, mention } = await this.getExecutor(event.guild, AuditLogEvent.GuildScheduledEventCreate);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Green)
       .setTitle(t(lang, "guild_scheduled_event_create"))
       .addFields(
         { name: t(lang, "event_name"), value: event.name },
-        { name: t(lang, "start_time"), value: `<t:${Math.floor(event.scheduledStartTimestamp / 1000)}:R>` }
+        { name: t(lang, "start_time"), value: `<t:${Math.floor(event.scheduledStartTimestamp ?? 0 / 1000)}:R>` },
+        { name: t(lang, "done_by"), value: mention }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(
+      event.guildId,
+      "INFO",
+      `User ${userTag} created scheduled event: ${event.name}`
+    );
+
     await this.logIfEnabled(event.guildId, "guild_scheduled_event_create", embed);
   }
 
   async guildScheduledEventDeleted(event: GuildScheduledEvent) {
     const lang = await this.getGuildLanguage(event.guildId);
+
+    const { userTag, mention } = await this.getExecutor(event.guild, AuditLogEvent.GuildScheduledEventDelete);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Red)
       .setTitle(t(lang, "guild_scheduled_event_delete"))
-      .addFields({ name: t(lang, "event_name"), value: event.name })
+      .addFields(
+        { name: t(lang, "event_name"), value: event.name },
+        { name: t(lang, "done_by"), value: mention }
+      )
       .setTimestamp();
+
+    await this.addToGuildLog(
+      event.guildId,
+      "INFO",
+      `User ${userTag} deleted scheduled event: ${event.name}`
+    );
+
     await this.logIfEnabled(event.guildId, "guild_scheduled_event_delete", embed);
   }
 
   async guildScheduledEventUpdated(oldEvent: GuildScheduledEvent, newEvent: GuildScheduledEvent) {
     const lang = await this.getGuildLanguage(newEvent.guildId);
+
+    const { userTag, mention } = await this.getExecutor(newEvent.guild, AuditLogEvent.GuildScheduledEventUpdate);
+
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
       .setTitle(t(lang, "guild_scheduled_event_update"))
       .addFields(
         { name: t(lang, "old_event_name"), value: oldEvent.name },
-        { name: t(lang, "new_event_name"), value: newEvent.name }
+        { name: t(lang, "new_event_name"), value: newEvent.name },
+        { name: t(lang, "done_by"), value: mention }
       )
       .setTimestamp();
+
+    await this.addToGuildLog(
+      newEvent.guildId,
+      "INFO",
+      `User ${userTag} updated scheduled event from ${oldEvent.name} to ${newEvent.name}`
+    );
+
     await this.logIfEnabled(newEvent.guildId, "guild_scheduled_event_update", embed);
   }
 
@@ -1126,5 +1383,23 @@ export default class Events {
         message,
       }
     });
+  }
+
+  private async getExecutor(guild: Guild, type: AuditLogEvent) {
+    try {
+      const logs = await guild.fetchAuditLogs({ type, limit: 1 });
+      const entry = logs.entries.first();
+
+      if (!entry) return { userTag: "Unknown", mention: t(await this.getGuildLanguage(guild.id), "unknown") };
+
+      return {
+        userTag: entry.executor?.username ?? "Unknown",
+        mention: `<@${entry.executor?.id}>`
+      };
+    } catch (err) {
+      console.warn(`Failed to fetch audit logs for ${type}:`, err);
+      const lang = await this.getGuildLanguage(guild.id);
+      return { userTag: "Unknown", mention: t(lang, "unknown") };
+    }
   }
 }
