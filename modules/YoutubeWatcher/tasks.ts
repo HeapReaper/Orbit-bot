@@ -62,12 +62,17 @@ export default class Tasks {
         const guildSettings = await getGuildSettings(watcher.guildId);
 
         if (!guildSettings) continue;
+        const thumbnailUrl = await this.getThumbnail(latest.id);
 
         const embed = new EmbedBuilder()
           .setTitle(latest.title.slice(0, 200) ?? "Oops, something went wrong")
-          .setDescription(latest.description?.slice(0, 4000) || "No description available.")
+          .setURL(latest.url)
+          .setDescription(latest.description?.slice(0, 350) || "No description available.")
           .setColor(guildSettings.primaryColor ?? "Purple")
-          .setTimestamp(latest.published);
+
+        if (thumbnailUrl) {
+          embed.setImage(thumbnailUrl)
+        }
 
         await channel.send({embeds: [embed]});
 
@@ -140,6 +145,27 @@ export default class Tasks {
     } catch (err) {
       Logging.error(`Description fetch error: ${err}`);
       return null;
+    }
+  }
+
+  async getThumbnail(videoId: string) {
+    const qualities = [
+      "maxresdefault.jpg",
+      "sddefault.jpg",
+      "hqdefault.jpg",
+      "mqdefault.jpg",
+      "default.jpg"
+    ];
+
+    for (const quality of qualities) {
+      const url = `https://i.ytimg.com/vi/${videoId}/${quality}`;
+
+      try {
+        await axios.head(url);
+        return url;
+      } catch {
+
+      }
     }
   }
 }
