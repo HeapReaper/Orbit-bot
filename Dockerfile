@@ -11,7 +11,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npx prisma generate
+RUN bun prisma generate
 
 RUN bun install
 
