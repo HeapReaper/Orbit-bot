@@ -85,5 +85,9 @@
   "triggered_by": "Getriggerd door",
   "used_forbidden_word": "Gebruik van een verboden woord",
   "non_admin_send_discord_invite": "Stuurde een invite link",
-  "our_state_for_bot_and_dashboard": "Online status voor onze bot en dashboard"
+  "our_state_for_bot_and_dashboard": "Online status voor onze bot en dashboard",
+  "trail_will_end_soon": "Trail eindigt binnenkort",
+  "trail_end_description": "Over 7 dagen eindigt de trail",
+  "contact": "Contact",
+  "email": "Email"
 }
