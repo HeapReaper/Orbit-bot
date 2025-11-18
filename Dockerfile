@@ -9,13 +9,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY package.json bun.lockb ./
-
-RUN bun install
-
 COPY . .
 
 RUN npx prisma generate
+
+RUN bun install
 
 WORKDIR /app/src
 
