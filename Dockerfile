@@ -13,8 +13,6 @@ COPY . .
 
 RUN bun install
 
-ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
-
 RUN bunx prisma generate
 
 WORKDIR /app/src
