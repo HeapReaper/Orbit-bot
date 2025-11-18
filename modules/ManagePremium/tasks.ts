@@ -38,19 +38,17 @@ export default class Tasks {
       if (!guild.trialEndsAt) continue;
 
       const trialEndsAt = new Date(guild.trialEndsAt);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      console.log(trialEndsAt);
       // 1 week before trail ends
       const weekBefore = new Date(trialEndsAt);
-      weekBefore.setDate(weekBefore.getDate() - 7);
+      const weekBeforeDay = new Date(weekBefore);
+      weekBeforeDay.setHours(0, 0, 0, 0);
 
       const reminderKey = `premium_trial_reminder:${guild.guildId}`;
 
-      if (now >= weekBefore && now < trialEndsAt) {
-        const alreadySent = await redis.get(reminderKey);
-
-        if (alreadySent) continue;
-
+      if (today.getTime() === weekBeforeDay.getTime()) {
         Logging.info(`Sending 1-week trial reminder for guild ${guild.guildId}`);
 
         const guildSettings = await getGuildSettings(guild.guildId);
@@ -88,8 +86,6 @@ export default class Tasks {
         } catch (err) {
           Logging.error(`Failed to send trail end notification channel: ${err}`);
         }
-        const secondsUntilTrialEnds = Math.ceil((trialEndsAt.getTime() - now.getTime()) / 1000);
-        await redis.set(reminderKey, "sent", "EX", secondsUntilTrialEnds);
       }
 
       // Trail expired
