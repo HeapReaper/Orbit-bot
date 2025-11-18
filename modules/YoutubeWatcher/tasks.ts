@@ -18,7 +18,8 @@ export default class Tasks {
     if (instance) return instance;
     instance = this;
 
-    cron.schedule("* * * * *", async () => {
+    // Runs every 5 minutes
+    cron.schedule("*/5 * * * *", async () => {
       Logging.info("Running YoutubeWatcher background task")
       await this.task();
     });
@@ -31,14 +32,14 @@ export default class Tasks {
       : await prisma.youtubeWatcher.findMany({ where: { enabled: true } });
 
     if (!cachedData) {
-      await redis.set("youtubeWatcherData", JSON.stringify(watchers), "EX", 60); // cache 1 minute
+      await redis.set("youtubeWatcherData", JSON.stringify(watchers), "EX", 300); // cache 5 minute
     }
 
     for (const watcher of watchers) {
       const guild = this.client.guilds.cache.get(watcher.guildId);
       if (!guild) continue;
 
-      const channel = guild.channels.cache.get(watcher.channel) as TextChannel;
+      const channel = await guild.channels.fetch(watcher.channel) as TextChannel;
       if (!channel) continue;
 
       // array in JSON field
@@ -60,10 +61,10 @@ export default class Tasks {
 
         const guildSettings = await getGuildSettings(watcher.guildId);
 
-        if (!guildSettings || !guildSettings.length) continue;
+        if (!guildSettings) continue;
 
         const embed = new EmbedBuilder()
-          .setTitle(latest.title ?? "Oops, something went wrong")
+          .setTitle(latest.title.slice(0, 200) ?? "Oops, something went wrong")
           .setDescription(latest.description?.slice(0, 4000) || "No description available.")
           .setColor(guildSettings.primaryColor ?? "Purple")
           .setTimestamp(latest.published);
@@ -71,7 +72,7 @@ export default class Tasks {
         await channel.send({embeds: [embed]});
 
         // store new last ID
-        await redis.set(redisKey, latest.id);
+        await redis.set(redisKey, latest.id, "EX", 60*60*24*30); // 30 days
       }
     }
   }
